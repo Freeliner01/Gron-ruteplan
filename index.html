@@ -1,10 +1,1009 @@
+
 <!doctype html>
 <html lang="da">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Byg din rute – døm selv: diesel eller el?</title>
-<!-- PLACEHOLDER -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚚</text></svg>">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { font-family: "Inter","Roboto","Segoe UI",system-ui,Arial,sans-serif; background: #EDF2FA; color: #333; margin: 0; padding: 20px 24px 24px 240px; line-height: 1.6; font-size: 17px; font-variant-numeric: tabular-nums; }
+  h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.01em; }
+  .sidebar { position: fixed; left: 20px; top: 20px; bottom: 20px; width: 200px; z-index: 50; background: #0F3D63; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.18); display: flex; flex-direction: column; gap: 2px; padding: 18px 10px; }
+  .sidebar .logo { font-size: 1.5em; color: #fff; text-align: center; margin-bottom: 14px; }
+  .sidebar .logo small { display: block; font-size: .5em; font-weight: 600; letter-spacing: .06em; color: #B8CDE0; margin-top: 4px; }
+  .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 6px; color: #DCE8F4; text-decoration: none; font-size: .95em; }
+  .sidebar a:hover { background: rgba(255,255,255,.09); }
+  .sidebar a.on { background: #16588E; color: #fff; font-weight: 600; }
+  .sidebar .si { font-size: 1.2em; }
+  .hero { background: rgba(255,255,255,.86); border-top: 4px solid #27AE60; border-radius: 8px; padding: 20px 26px; margin: 0 0 14px; }
+  .hero h1 { margin: 8px 0; font-size: 1.75em; font-weight: 600; }
+  .hero p { margin: 0; color: #52606D; max-width: 660px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #16588E; outline-offset: 2px; }
+  .card { background: rgba(255,255,255,.92); border: 1px solid #EEF0F4; border-radius: 8px; padding: 22px 26px; margin: 14px 0; box-shadow: 0 2px 6px rgba(15,61,99,.08); display: none; }
+  .card.panel-open { display: block; animation: fadeUp .25s ease; }
+  footer#kilder.panel-open { display: block; animation: fadeUp .25s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .card.panel-open, footer#kilder.panel-open { animation: none; } }
+  .card[data-panel="regler"], .card[data-panel="quiz"] { background: #fff; }
+  body { counter-reset: sec; }
+  h2.sec { font-size: 1.1em; font-weight: 600; margin: 18px 0 10px; display: flex; align-items: center; gap: 10px; }
+  h2.sec::before { counter-increment: sec; content: counter(sec, decimal-leading-zero); flex: none; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; background: #0F3D63; color: #fff; border-radius: 6px; font-size: .82em; }
+  .hint { font-size: .88em; color: #595959; }
+  .card p { max-width: 70ch; }
+  .startgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .sbox { background: #F8FAFD; border: 1px solid #D8E4F5; border-radius: 8px; padding: 12px 16px; font-size: .92em; }
+  .sbox strong { display: block; margin-bottom: 4px; color: #0F3D63; }
+  table.rt { width: 100%; border-collapse: collapse; font-size: .94em; margin: 8px 0; }
+  table.rt th { text-align: left; background: #EAF1F8; color: #0F3D63; padding: 8px 10px; }
+  table.rt td, table.rt th { border-top: 1px solid #E4EAF2; padding: 8px 10px; }
+  table.rt input { font: inherit; width: 100%; min-width: 0; padding: 6px 6px; border: 1px solid #C9D6E6; border-radius: 6px; }
+  .route { min-width: 0; overflow-wrap: break-word; }
+  .route select { max-width: 100%; }
+  .truckspec { overflow-wrap: break-word; }
+  .routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px; }
+  .route { border: 2px solid #C9D6E6; border-radius: 10px; padding: 14px 16px; background: #fff; }
+  .route.win { border-color: #27AE60; box-shadow: 0 0 0 3px #EDFAF2; }
+  .route h4 { margin: 0 0 8px; color: #0F3D63; }
+  .truckpick { margin: 4px 0 10px; }
+  .truckpick select { font: inherit; font-size: .95em; padding: 8px 10px; border: 1px solid #C9D6E6; border-radius: 6px; background: #fff; max-width: 100%; }
+  .truckspec { font-size: .82em; color: #595959; background: #F4F8FC; border: 1px solid #E2EBF5; border-radius: 6px; padding: 6px 10px; margin-top: 6px; }
+  .ev { border-radius: 8px; padding: 10px 14px; margin: 8px 0; font-size: .93em; border: 1px solid transparent; }
+  .ev.ok { background: #EDFAF2; border-color: #C6EFD8; color: #1D7A46; }
+  .ev.warn { background: #FDF6EA; border-color: #F5E3C3; color: #9C6B1D; }
+  .stat { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; font-size: .95em; margin: 8px 0; }
+  .stat b { color: #16588E; }
+  .crit { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  .crit button { font: inherit; padding: 8px 14px; border: 1px solid #C9D6E6; border-radius: 6px; background: #fff; cursor: pointer; }
+  .crit button.on { background: #E8F5E9; border-color: #27AE60; font-weight: 600; }
+  .quizbox { border: 1px solid #E4EAF2; border-radius: 8px; padding: 14px 16px; margin: 10px 0; background: #FBFCFE; }
+  .quizbox button { font: inherit; padding: 8px 14px; margin: 4px 6px 0 0; border: 1px solid #C9D6E6; border-radius: 6px; background: #fff; cursor: pointer; }
+  textarea { font: inherit; width: 100%; padding: 8px; border: 1px solid #C9D6E6; border-radius: 6px; }
+  footer#kilder { background: rgba(255,255,255,.92); border: 1px solid #EEF0F4; border-radius: 8px; padding: 16px 20px; font-size: .88em; color: #555; display: none; }
+  footer#kilder.panel-open { display: block; }
+  footer#kilder a { color: #16588E; }
+  .upd { background:#fff; border:1px solid #E4EAF2; border-left:4px solid #0F3D63; border-radius:8px; padding:12px 16px; margin:10px 0; }
+  .upd h4 { margin:0 0 4px; font-size:1em; color:#0F3D63; }
+  .upd p { margin:4px 0; font-size:.92em; }
+  .upd .kilde { font-size:.8em; color:#595959; margin:6px 0 0; }
+  .badge { display:inline-block; font-size:.72em; font-weight:700; letter-spacing:.04em; padding:2px 9px; border-radius:999px; margin-right:6px; vertical-align:1px; }
+  .badge.nyt { background:#EDFAF2; color:#1D7A46; }
+  .badge.rettelse { background:#FDEDEC; color:#B3261E; }
+  .badge.praecis { background:#E8F0FE; color:#16588E; }
+  .badge.takster { background:#FDF1E3; color:#9C6B1D; }
+  .badge.uddybet { background:#F0F9FF; color:#0E7490; }
+  @media (max-width: 1100px) {
+    body { padding: 70px 14px 20px; }
+    .sidebar { top: 0; left: 0; right: 0; bottom: auto; width: auto; height: 48px; flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 4px; padding: 8px; overflow-x: auto; }
+    .sidebar .logo { display: none; }
+    .sidebar a { flex: 0 0 auto; font-size: .72em; padding: 8px 8px; gap: 5px; justify-content: center; text-align: center; white-space: nowrap; background: rgba(255,255,255,.06); }
+    .sidebar .si { font-size: 1em; }
+  }
+  /* v1-tilføjelser: knapper, flow, fremdrift, mobil-tabeller, print */
+  .act { font: inherit; padding: 10px 18px; background: #27AE60; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+  .ghost { font: inherit; padding: 8px 14px; border: 1px solid #C9D6E6; border-radius: 6px; background: #fff; color: #333; cursor: pointer; }
+  .ghost.small { padding: 6px 12px; font-size: .9em; }
+  .pnav { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .pnav .act { padding: 10px 14px; font-size: .95em; }
+  .pnav .act.back { background: #fff; color: #0F3D63; border: 1px solid #C9D6E6; }
+  .step { margin-left: auto; flex: none; background: #EAF1F8; color: #0F3D63; font-size: .72em; font-weight: 700; letter-spacing: .03em; padding: 3px 10px; border-radius: 999px; }
+  .hero .step { display: inline-block; margin: 0 0 8px; }
+  .tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .wintag { display: inline-block; background: #EDFAF2; color: #1D7A46; border: 1px solid #C6EFD8; border-radius: 999px; font-size: .72em; font-weight: 700; letter-spacing: .03em; padding: 2px 9px; margin-left: 8px; vertical-align: 1px; }
+  table.rt button.del { border: none; background: #FDEDEC; color: #B3261E; border-radius: 6px; cursor: pointer; padding: 4px 9px; font-weight: 700; }
+  .kopimsg { color: #1D7A46; font-weight: 600; font-size: .9em; }
+  a.ordlink { color: #16588E; }
+  details summary.bg { cursor: pointer; color: #16588E; font-size: .88em; font-weight: 600; margin-top: 4px; }
+  @media print { .sidebar, .pnav, .act, .ghost, button.del { display: none !important; } body { padding: 0; background: #fff; } .hero { border-top-color: #333; } .card, footer#kilder { box-shadow: none; border: 1px solid #ccc; } }
+</style>
 </head>
-<body></body>
+<body>
+
+<nav class="sidebar" aria-label="Hurtig navigation">
+  <div class="logo">🌿<small>GRØN ruteplan</small></div>
+  <a href="#start" class="on"><span class="si" aria-hidden="true">🏠</span><span class="sl">Start</span></a>
+  <a href="#regler"><span class="si" aria-hidden="true">🧭</span><span class="sl">Modellen</span></a>
+  <a href="#byg"><span class="si" aria-hidden="true">🗺️</span><span class="sl">Byg din rute</span></a>
+  <a href="#udgifter"><span class="si" aria-hidden="true">💰</span><span class="sl">Udgifter</span></a>
+  <a href="#valg"><span class="si" aria-hidden="true">🗳️</span><span class="sl">Dit valg</span></a>
+  <a href="#quiz"><span class="si" aria-hidden="true">❓</span><span class="sl">Quiz</span></a>
+  <a href="#opdateringer"><span class="si" aria-hidden="true">🔄</span><span class="sl">Opdateringer</span></a>
+  <a href="#kilder"><span class="si" aria-hidden="true">📚</span><span class="sl">Kilder</span></a>
+</nav>
+
+<div class="hero" id="start" data-panel="start">
+  <span class="step">Trin 1 af 6 · Start</span>
+  <h1>Byg din rute – døm selv: diesel eller el?<br><span style="font-weight:300; color:#6B7280;">vælg en rigtig lastbil – og se CO2-regnskabet for begge</span></h1>
+  <p>To ruter, samme leverancer. Du vælger selv, hvilke rigtige lastbiler der skal dyste: en diesel mod en el-lastbil fra det europæiske marked. Byg ruterne og se, hvor meget du sparer på CO2 – og hvad det koster i tid, pris og ladning.</p>
+</div>
+
+<div class="card" data-panel="start">
+  <div class="startgrid" style="grid-template-columns: 1fr">
+    <div class="sbox">
+      <strong><span aria-hidden="true">🎯</span> Formålet med denne side</strong>
+      <p>Som chauffør og planlægger skal du kunne vælge ruter og køretøjer med omtanke: hvad koster turen i energi, tid og CO2 – og hvad betyder lasten og lastbilen for regnskabet? Her bygger du to ruter, vælger en rigtig diesel-lastbil og en rigtig el-lastbil fra markedet, og sammenligner tallene. Til sidst træffer du et fagligt valg, du kan begrunde. Det er den samme måde at tænke på, som branchen efterspørger: ruter og biler, der er gode for både økonomien og klimaet.</p>
+      <p style="margin:10px 0 2px"><b>Efter øvelsen kan du:</b></p>
+      <ul style="margin:4px 0 0; padding-left:18px">
+        <li>beregne CO2-regnskabet for en rute på både diesel og el</li>
+        <li>forklare, hvad last, temperatur og ladning betyder for forbrug og rækkevidde</li>
+        <li>vælge og fagligt begrunde en drivkraft ud fra miljø, økonomi, kvalitet og arbejdsmiljø</li>
+      </ul>
+    </div>
+  </div>
+  <div class="startgrid">
+    <div class="sbox">
+      <strong><span aria-hidden="true">1️⃣</span> Sådan virker det</strong>
+      <p>Vælg en diesel-lastbil OG en el-lastbil til hver rute – rigtige modeller fra Volvo, Scania, Mercedes-Benz og MAN. Skriv så rutes etaper: kilometer, hastighed og tons last pr. strækning. Siden kører ruten for begge lastbiler, så du direkte kan se forskellen i CO2, pris, tid og ladning – uanset om du arbejder med rute A eller B.</p>
+    </div>
+    <div class="sbox">
+      <strong><span aria-hidden="true">🧭</span> Hvorfor er det vigtigt?</strong>
+      <p>Diesel udleder ca. 2,68 kg CO2 pr. liter – direkte fra udstødningsrøret. El-lastbiler udleder ingenting der, men strømmens produktion har sin egen udledning (ca. 0,1–0,2 kg CO2 pr. kWh i det danske elnet). Til gengæld skal du som chauffør tænke over rækkevidde og ladning. Derfor er valget ikke sort-hvid: det afhænger af ruten, lasten og lademulighederne.</p>
+    </div>
+  </div>
+  <div class="startgrid">
+    <div class="sbox">
+      <strong><span aria-hidden="true">📌</span> Fagord du møder på siden</strong>
+      <p><b id="ord-etape">Etape:</b> delstrækning pr. lastvægt.<br>
+      <b id="ord-co2diesel">CO2-faktor diesel:</b> 1 liter diesel afgiver ca. 2,68 kg CO2 ved forbrænding.<br>
+      <b id="ord-kwh">kWh:</b> måleenhed for elektrisk energi – el-lastbilens "liter".<br>
+      <b id="ord-elmix">Elmix:</b> strømmen er en blanding af vind, vand, sol og fossile kilder. CO2 pr. kWh afhænger af blandingen.<br>
+      <b id="ord-netto">Netto-batteri:</b> den del af batteriet, bilen typisk må bruge (ca. 85 % af det installerede).<br>
+      <b id="ord-raekkevidde">Rækkevidde:</b> hvor langt bilen kan køre på én opladning – den falder, når lasten stiger.<br>
+      <b id="ord-dc">DC-hurtigladning:</b> hurtigladning med jævnstrøm – batteriet fyldes hurtigere end ved almindelig ladning.<br>
+      <b id="ord-last">Last-procent:</b> hvor fyldt traileren er – forbruget stiger med vægten, på diesel og el.<br>
+      <b id="ord-vejafgift">Vejafgift (km-afgift):</b> afgift pr. kilometer på afgiftspligtige veje – sat efter bilens CO2-udledning: jo renere bil, jo lavere sats.<br>
+      <b id="ord-vaegtafgift">Vægtafgift:</b> fast årlig ejerafgift pr. lastbil, sat efter totalvægt, aksler og affjedring.<br>
+      <b id="ord-koretid">Køretidsreglerne:</b> over 9 t kørsel på én dag kræver lovpligtig pause og hviletid – reglerne og kilderne står i panelet Kilder.</p>
+    </div>
+  </div>
+  <div style="display:flex; justify-content: flex-end; margin-top:10px"><button class="act" onclick="showPanel('regler')">Videre til modellen →</button></div>
+</div>
+
+<div class="card" data-panel="regler">
+  <h2 class="sec"><span aria-hidden="true">🧭</span> Lastbilerne og modellen<span class="step">Trin 2 af 6</span></h2>
+  <p>Her er lastbilerne, du kan vælge imellem – rigtige modeller med nøgletal fra markedet. Forbruget regnes pr. <a class="ordlink" href="#ord-etape" data-ord="ord-etape">etape</a> efter lasten: forbrug = forbrug tom + (last t ÷ 34) · ekstra ved fuld last.</p>
+  <div class="tablewrap">
+  <table class="rt">
+    <tr><th>Lastbil</th><th>Drivkraft</th><th>Forbrug i modellen</th><th>Batteri / rækkevidde</th></tr>
+    <tr><td>🛢️ Volvo FH 460 I-Save</td><td>Diesel</td><td>19–29 l/100 km (ca. 21,5 l/100 km i landsvejstest)</td><td>Typisk tank ca. 600 l (findes op til over 1.000 l – tjek selv) · ca. 10 min. for en fuld tank ved 60 l/min.</td></tr>
+    <tr><td>🛢️ Scania R 500</td><td>Diesel</td><td>22–32 l/100 km (ca. 25 l/100 km typisk snit)</td><td>Typisk tank ca. 700 l · ca. 12 min. for en fuld tank</td></tr>
+    <tr><td>🛢️ MAN TGX 15.480</td><td>Diesel</td><td>21–31 l/100 km (typisk interval, tjek selv aktuelt tal)</td><td>Typisk tank ca. 700 l · ca. 12 min. for en fuld tank</td></tr>
+    <tr><td>⚡ Volvo FM Electric</td><td>El</td><td>1,1–1,6 kWh/km</td><td>540 kWh installeret · op til 380 km · <a class="ordlink" href="#ord-dc" data-ord="ord-dc">DC</a> ca. 1–2 t · ladekurve-middel ca. 150 kW = ca. 110 kWh på en 45-min pause</td></tr>
+    <tr><td>⚡ Scania 45R</td><td>El</td><td>1,2–1,8 kWh/km</td><td>624 kWh · ca. 350 km (ca. 40 t motorvej) · hurtiglader op til 375 kW · ladekurve-middel ca. 250 kW = ca. 190 kWh på 45 min</td></tr>
+    <tr><td>⚡ Mercedes-Benz eActros 600</td><td>El</td><td>1,0–1,5 kWh/km</td><td>621 kWh · op til 500 km · hurtiglader op til 400 kW · ladekurve-middel ca. 320 kW = ca. 240 kWh på 45 min</td></tr>
+    <tr><td>⚡ MAN eTGX</td><td>El</td><td>1,0–1,5 kWh/km</td><td>op til 480 kWh · op til 570 km (trækker, uden mellemladning) · ladekurve-middel ca. 300 kW = ca. 225 kWh på 45 min</td></tr>
+  </table></div>
+  <div class="tablewrap"><table class="rt">
+    <tr><th>Fælles regler</th><th>Værdi</th></tr>
+    <tr><td>CO2: diesel</td><td>liter × 2,68 kg CO2 (udledning ved forbrænding)</td></tr>
+    <tr><td>CO2: el</td><td><a class="ordlink" href="#ord-kwh" data-ord="ord-kwh">kWh</a> × 0,2 kg CO2 – <a class="ordlink" href="#ord-elmix" data-ord="ord-elmix">elmixens udledning</a>: jo grønnere strøm, jo lavere</td></tr>
+    <tr><td>Real verifikation: ICCT (aug. 2025)</td><td>Modellen regner med 100–150 kWh/100 km for el. ICCT fulgte <b>91 europæiske el-trækkere i reel drift</b> (ECTA-flåder) med forbrug 92–150 kWh/100 km (typisk 107–116) – modellen ligger altså i virkelighedens felt.
+      <details><summary class="bg">Baggrund: hvad ICCT-studiet viste</summary><p><b>Lasten var den største enkeltfaktor</b> (lige som modellens last-regel), regenerativ bremsing vinder i snit 19 % af forbruget tilbage, og rækkevidden var 11–19 % højere end producenternes egne tal. Producerne bygger selv en reserve ind, så chaufføren kun har de BRUGBARE kWh til rådighed – det står i fabrikantens opgivelser, og eleven skal ikke regne reserve selv. Derfor viser modellen "installeret" og "brugbar" som to forskellige tal.</p></details></td></tr>
+    <tr><td>Temperatur</td><td>Forbrugstillæg i modellen: el +7–35 %, diesel +2–12 % – og 0–10 % mindre brugbart batteri i kulden. Vælg temperatur under Byg din rute og se, hvad frost gør ved rækkevidden og ladestoppene.
+      <details><summary class="bg">Baggrund: hvorfor kulden rammer el-lastbilen hårdere</summary><p>Vi kører i Danmark – også om vinteren. Diesel-motoren laver selv spildvarme til kabinen, men el-lastbilen skal lave varmen MED strøm fra batteriet – OG selve batteriet er koldt-følsomt: lithium-celler leverer mindre brugbar energi ved lave temperaturer, og de tager også imod ladning langsommere, indtil de er blevet varme. Derfor stiger forbruget mere for el end for diesel, når det er koldt, og den BRUGBARE batterikapacitet falder. Modellen regner <a class="ordlink" href="#ord-netto" data-ord="ord-netto">netto-batteriet</a> ned om vinteren – alt sammen undervisningsværdi: prøv temperatur-vælgeren og sammenlign.</p></details></td></tr>
+    <tr><td>Tankning</td><td>Modellen regner med ca. 60 l/min. fra tankpistolen – diesel fyldes hurtigt op.
+      <details><summary class="bg">Baggrund: pistoler og eksempler</summary><p>En tankpistol til lastbiler giver typisk ca. 40–60 l/min., og højtflow-pistoler op til 280 l/min. Derfor er diesel "rigtig hurtig at fylde op": fx 150 l (ca. 600 km ved 25 l/100 km) tager ca. 3 min. Sammenlign selv med ladekurven ovenfor.</p></details></td></tr>
+    <tr><td>Ladekurve</td><td>Modellen bruger en middel-ladeeffekt pr. lastbil: 150–320 kW. Middel-effekt × minutter = kWh.
+      <details><summary class="bg">Baggrund: hvorfor det hedder en kurve</summary><p>Batteriet lader hurtigst, når det er næsten tomt – jo fyldigere, jo langsommere (derfor kaldes det en kurve). Eksempel: 320 kW × 45 min (0,75 t) = 240 kWh – nok til ca. 150–200 km ekstra kørsel. Så chaufførens pause kan blive bilens ladetid.</p></details></td></tr>
+    <tr><td>Priser</td><td>Diesel: 10 kr./l · depot-strøm: 0,75 kr./kWh · hurtiglader på ruten: ca. 2,50 kr./kWh. Vælg lade-tilstand under Byg din rute.
+      <details><summary class="bg">Baggrund: depot eller rute?</summary><p>Derfor betyder det ALT for regnskabet, om bilen kan nå hjem på depot-strøm (fx natte-ladning i vognmandens eget depot/ladenetværk) eller må lades undervejs – prøv mulighederne i lade-vælgeren.</p></details></td></tr>
+    <tr><td>Køretid</td><td>km ÷ snitfart. På ruten: chaufføren skal holde 45 min pause efter 4½ times kørsel – lægges pausen som ladestop, koster ladningen stort set ingen ekstra tid. I depotet under den daglige 11-timers hviletid er der god tid til billig, langsom ladning, så bilen er klar næste morgen</td></tr>
+    <tr><td>Vejafgift pr. tur</td><td>km på afgiftspligtige veje (forenklet: hele ruten) × sats: diesel ca. 0,91 kr./km (CO2-klasse 3, vogntog over 32 t) · el kun 0,13 kr./km (CO2-klasse 5, nul-udledning) – 2026-satserne i loven om vejafgift</td></tr>
+    <tr><td>Vægtafgift pr. tur</td><td>Den årlige vægtafgift (2026-satser: ca. 2.709 kr./år for en luftaffjedret tung trækker, ca. 809 kr./år for en ca. 18 t distributionsbil) omregnet pr. km ved 100.000 km om året</td></tr>
+    <tr><td>Anskaffelse pr. tur (vugge til grav)</td><td>(købspris × (1 − restværdi)) ÷ levetid i km × turens km. Typiske undervisningsværdier: diesel-trækker ca. 800.000 kr., el-trækker ca. 1,9–2,4 mio. kr., 18 t-distributionsbil ca. 700.000 kr. (diesel) / 1,6 mio. kr. (el). Levetid: ca. 700.000 km (langtur), 400.000 km (distribution). Find selv de rigtige priser hos forhandleren</td></tr>
+  </table></div>
+  <p class="hint">Model-tallene er undervisnings-forenklinger bygget på producenternes oplysninger – virksomheder regner med deres egne flådetal og rigtige hastigheder. Din opgave er at spotte mønstrene: hvad betyder drivkraft, last og rækkevidde?</p>
+  <div class="pnav"><button class="act back" onclick="showPanel('start')">← Tilbage: Start</button><button class="act" onclick="showPanel('byg')">Videre: Byg din rute →</button></div>
+</div>
+
+<div class="card" id="byg" data-panel="byg">
+  <h2 class="sec"><span aria-hidden="true">🗺️</span> Byg din rute – diesel mod el<span class="step">Trin 3 af 6</span></h2>
+  <p class="hint">Prøv en klassisk dyst: <b>Rute A</b> er to små ture med halv last. <b>Rute B</b> er én stor tur med fuld last. Vælg en diesel- og en el-lastbil til hver rute, skriv km, snitfart og last pr. etape – og se forskellen mellem drivkræfterne på begge ruter. Prøv så at skifte lastbilerne ud: ændrer det, hvor meget el sparer?</p>
+  <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:8px 0 14px;">
+    <label for="ladning" style="font-size:.9em;"><b><span aria-hidden="true">⚡</span> Hvor lades el-lastbilerne?</b></label>
+    <select id="ladning" style="font:inherit; font-size:.92em; padding:8px 10px; border:1px solid #C9D6E6; border-radius:6px; background:#fff;">
+      <option value="auto" selected>Smart: depot-strøm først (0,75 kr./kWh), resten på hurtiglader (2,50 kr./kWh)</option>
+      <option value="depot">Kun eget depot/ladenetværk (0,75 kr./kWh)</option>
+      <option value="rute">Kun hurtiglader på ruten (2,50 kr./kWh)</option>
+    </select>
+    <label for="temp" style="font-size:.9em;"><b><span aria-hidden="true">🌡️</span> Vejr og temperatur</b></label>
+    <select id="temp" style="font:inherit; font-size:.92em; padding:8px 10px; border:1px solid #C9D6E6; border-radius:6px; background:#fff;">
+      <option value="20" selected>Sommer: ca. 20 °C</option>
+      <option value="10">Efterår/forår: ca. 10 °C</option>
+      <option value="0">Vinter: ca. 0 °C</option>
+      <option value="-10">Vinter med frost: ca. -10 °C</option>
+    </select>
+    <label style="font-size:.9em; display:flex; align-items:center; gap:6px;">
+      <input type="checkbox" id="pauseLad" checked> chaufføren bruger sin <b>45-min pause</b> til at lade
+    </label>
+    <span class="hint">Strømprisen ændrer regnskabet markant – prøv mulighederne! I depotet under 11-timers hviletiden er der god tid til billig, langsom ladning.</span>
+  </div>
+  <div class="routes">
+    <div class="route" id="ra"><h4>🅰 Rute A</h4><div class="truckpick" id="pickA"></div><div class="tablewrap"><table class="rt" id="tblA"></table></div></div>
+    <div class="route" id="rb"><h4>🅱 Rute B</h4><div class="truckpick" id="pickB"></div><div class="tablewrap"><table class="rt" id="tblB"></table></div></div>
+  </div>
+  <div style="display:flex; gap:10px; margin:10px 0; flex-wrap:wrap; align-items:center"><button class="ghost small" id="addA">+ etape til A</button><button class="ghost small" id="addB">+ etape til B</button><button class="ghost small" id="resetR">↻ Nulstil ruter</button><span class="hint">Etaper kan fjernes igen med × i tabellen. Dit arbejde gemmes automatisk i browseren.</span></div>
+  <div id="res"></div>
+  <textarea id="refl" rows="3" placeholder="Jeg ville vælge rute ___ med lastbilen ___ fordi ... Det betyder ___ for miljø, økonomi, kvalitet og arbejdsmiljø."></textarea>
+  <div style="display:flex; gap:10px; align-items:center; margin-top:8px; flex-wrap:wrap"><button class="ghost small" id="kopi">📋 Kopiér begrundelse og tal</button><span class="kopimsg" id="kopiMsg" role="status"></span></div>
+  <p class="hint" id="reflMsg"></p>
+  <div class="pnav"><button class="act back" onclick="showPanel('regler')">← Tilbage: Modellen</button><button class="act" onclick="showPanel('udgifter')">Videre: Udgifter →</button></div>
+</div>
+
+<div class="card" data-panel="udgifter">
+  <h2 class="sec"><span aria-hidden="true">💰</span> Udgifter – hvad koster turen egentlig?<span class="step">Trin 4 af 6</span></h2>
+  <p>Her ser du de samme ture og lastbiler, som du valgte under <b>Byg din rute</b> – men kun regnskabet. Ruteplanlægningen bestemmer kjørte kilometer og last. Udgifterne nedenunder viser, hvad det koster at gennemføre planen: energi, afgifter – og hvad el-lastbiler faktisk sparer.</p>
+  <div class="tablewrap">
+  <table class="rt" style="font-size:.88em">
+    <tr><th>Kort om udgiftterne</th><th>Pointe</th></tr>
+    <tr><td>Energi (brændstof/el)</td><td>Den største udgift pr. tur – afhænger af km, last og køremåde</td></tr>
+    <tr><td>Vejafgift (km-afgift)</td><td>Betales pr. km på afgiftspligtige veje – el sidder i den billigste CO2-klasse (0,13 kr./km mod ca. 0,91 for diesel)</td></tr>
+    <tr><td>Vægtafgift</td><td>Fast beløb pr. år – betales hvad end bilen kører; her omregnet pr. km (100.000 km/år)</td></tr>
+    <tr><td>Strømpris – depot eller rute?</td><td>Eget depot/ladenetværk: ca. 0,75 kr./kWh – hurtiglader på ruten: ca. 2,50 kr./kWh. Vælg lade-tilstand under Byg din rute; her ser du, hvad det gør ved regnskabet</td></tr>
+    <tr><td>Anskaffelse (vugge til grav)</td><td>Købspris minus restværdi, fordelt over bilens levetid i km – el-lastbiler koster typisk dobbelt så meget at købe, men har langt lavere drift. Priserne er <b>undervisningsværdier</b>: find selv aktuelle priser hos forhandleren</td></tr>
+  </table></div>
+  <p class="hint">Bemærk forskellen: energi og vejafgift er <b>variable udgifter</b> (de vokser med km), mens vægtafgiften er en <b>fast udgift</b> – den samme, om bilen kører 1.000 eller 150.000 km om året. Derfor kan lange ture "fordele" vægtafgiften bedre.</p>
+  <div style="background:#F4F8FC; border:1px solid #D8E4F5; border-radius:10px; padding:14px 16px; margin:12px 0;">
+    <label for="scen" style="font-size:.95em"><b><span aria-hidden="true">🎛️</span> Scenarier: hvad skal der til, før el vinder regnskabet?</b></label>
+    <select id="scen" style="font:inherit; font-size:.92em; padding:8px 10px; border:1px solid #C9D6E6; border-radius:6px; background:#fff; margin:6px 0; width:100%; max-width:560px;">
+      <option value="nu" selected>Nu: status quo (depot-strøm 0,75 kr./kWh, i dagens priser)</option>
+      <option value="sol">Egne standere + solceller på lageret + lagringsbatteri (selvforsyning, ca. 0,45 kr./kWh)</option>
+      <option value="nat">Smart nat-ladning med dynamisk nettarif (ca. 0,55 kr./kWh)</option>
+      <option value="frem">Fremtid ca. 2030: billigere batterier (-35 % anskaffelse) + strøm ca. 0,35 kr./kWh</option>
+    </select>
+    <p class="hint" id="scenNote" style="margin:4px 0 0"></p>
+  </div>
+  <div id="udgiftRes"></div>
+  <div class="sbox" style="margin:12px 0">
+    <strong><span aria-hidden="true">🔋</span> Batterityper og fremtiden – hvad sker der med batterierne?</strong>
+    <ul style="margin:6px 0 0; padding-left:18px">
+      <li><b>LFP (jernfosfat):</b> billigere råstoffer, holder til mange flere opladninger, men tungere pr. kWh – bruges allerede i flere el-lastbiler.</li>
+      <li><b>NMC (nikkel-mangan-kobolt):</b> højest energitæthed – flest kWh pr. kilo og dermed længst rækkevidde.</li>
+      <li><b>Solid-state:</b> kommende teknologi med mere energi på mindre plads og hurtigere ladning – endnu ikke i lastbiler på vejen.</li>
+      <li><b>Natrium-ion:</b> billigere materialer uden lithium og kobolt – under udvikling, først til lettere transporter.</li>
+      <li><b>Megawatt-ladning (MCS):</b> Daimler har demonstreret 1.000 kW-ladning af eActros 600 – ca. 6–700 kWh på én 45-min pause. Standarden er på vej i Europa og kan gøre ladestop lige så rutineprægede som tankning.</li>
+      <li><b>Batteripriser:</b> batterier er blevet markant billigere, og ICCT målte, at flåderne kun udnyttede ca. 44 % af batteriet – fremtidens vognmænd kan klare sig med mindre batteri, hvis ruten er planlagt godt.</li>
+    </ul>
+    <p class="hint">Tallene er undervisningsværdier bygget på producenternes og ICCT's oplysninger – tjek selv de nyeste modeller og priser.</p>
+  </div>
+  <div class="pnav"><button class="act back" onclick="showPanel('byg')">← Tilbage: Byg din rute</button><button class="act" onclick="showPanel('valg')">Videre: Dit valg →</button></div>
+</div>
+
+<div class="card" data-panel="valg">
+  <h2 class="sec"><span aria-hidden="true">🗳️</span> Dit valg som fagperson<span class="step">Trin 5 af 6</span></h2>
+  <p>Hvad vejer højest for dig på de ture, du har bygget? Tryk på ét kriterium – så rangerer siden dine fire muligheder (begge ruter, både diesel og el) efter lige præcis dét, du synes er vigtigst. Tallene kommer direkte fra Byg din rute og Udgifter.</p>
+  <div class="crit" id="crit"></div>
+  <div id="valgRes"></div>
+  <p class="hint">Sammenlign med din makker: valgte I det samme kriterium – og blev det den samme lastbil, der vandt? Skriv jeres begrundelse i refleksionsfeltet under Byg din rute.</p>
+  <div class="pnav"><button class="act back" onclick="showPanel('udgifter')">← Tilbage: Udgifter</button><button class="act" onclick="showPanel('quiz')">Videre: Quiz →</button></div>
+</div>
+
+<div class="card" data-panel="quiz">
+  <h2 class="sec"><span aria-hidden="true">❓</span> Quiz: tjek dig selv<span class="step">Trin 6 af 6</span></h2>
+  <p class="hint">Du kan tage hvert spørgsmål igen: svar, læs forklaringen, og tryk "Prøv igen", indtil du har det hele på plads. Siden er uafhængig af itslearning, så brug "Kopiér begrundelse og tal" under Byg din rute, når du skal aflevere.</p>
+  <div id="quiz"></div>
+  <div class="pnav"><button class="act back" onclick="showPanel('valg')">← Tilbage: Dit valg</button><button class="act" onclick="showPanel('opdateringer')">Videre: Opdateringer →</button></div>
+</div>
+
+<div class="card" data-panel="opdateringer">
+  <h2>🔄 Opdateringer: hvad er nyt på siden?</h2>
+  <p>Siden tjekkes den 1. hver måned. Hver gang kontrollen finder noget nyt eller noget, der skal rettes i sidens tal og regneregler (priser, satser, satser for afgifter, lastbildata, elmix), skrives det her, nyeste først. Står der ikke en ny linje for denne måned, betyder det bare, at tallene er uændrede. Datoen for den seneste kontrol står altid i boksen <em>Hvor friske er tallene?</em> under Kilder. Listen viser kun faglige ændringer, ikke layout eller tekniske detaljer.</p>
+
+  <div class="upd">
+    <h4><span class="badge nyt">NYT</span><span aria-hidden="true">🔍</span> Modellen afstemt med ICCT-realdrift</h4>
+    <p>Undervisningsmodellen er afstemt med ICCTs studie fra august 2025 af 91 europæiske el-trækkere i reel drift: forbruget regnes nu med 100–150 kWh/100 km (målt felt 92–150, typisk 107–116), og siden viser "installeret" og "brugbar" batterikapacitet som to separate tal.</p>
+    <p class="kilde">22. nov 2026 · ICCT: EU goods transport (aug. 2025) – se Kilder</p>
+  </div>
+
+  <div class="upd">
+    <h4><span class="badge nyt">NYT</span><span aria-hidden="true">🌡️</span> Temperaturmodel: vinter og frost</h4>
+    <p>Ny temperaturvælger under Byg din rute: forbrugstillæg +7–35 % for el og +2–12 % for diesel i kulden, og 0–10 % mindre brugbart batteri ved lave temperaturer. Se selv, hvad frost gør ved rækkevidde og ladestop – og prøv kombinationen med pause-ladning.</p>
+    <p class="kilde">22. nov 2026 · Bygger på Öko-Institut/TUMs målinger på el-lastbiler i drift – se Kilder</p>
+  </div>
+
+  <div class="upd">
+    <h4><span class="badge nyt">NYT</span><span aria-hidden="true">🎛️</span> Scenarier og tilbagebetalingsregnestykke</h4>
+    <p>Nye scenarier under Udgifter: egne standere med solceller og lagringsbatteri, smart nat-ladning og et fremtidsscenarium ca. 2030 med billigere batterier. Desuden et regnestykke for, efter hvor mange km el-lastbilens ekstra købspris er tjent hjem.</p>
+    <p class="kilde">22. nov 2026 · Modellens egne regneregler (undervisningsværdier)</p>
+  </div>
+
+  <div class="upd">
+    <h4><span class="badge nyt">NYT</span><span aria-hidden="true">🔇</span> Arbejdsmiljø: støjmålinger og hviletidsdebat</h4>
+    <p>Kriteriet Arbejdsmiljø i Dit valg er underbygget med rigtige målinger: el-lastbilen er målt ca. 6 dB(A) lavere end diesel ved 20 km/t og ca. 12 dB lavere ved acceleration. Debatten om, hvorvidt ladetid tæller som hviletid, er markeret som uafklaret i EU.</p>
+    <p class="kilde">22. nov 2026 · MAN/Fraunhofer IML (juli 2023) og trans.info – se Kilder</p>
+  </div>
+
+  <div class="upd">
+    <h4><span class="badge praecis">PRÆCISERET</span><span aria-hidden="true">⚖️</span> 2026-satser: vejafgift, vægtafgift og elafgift</h4>
+    <p>Årets satser er kontrolleret mod Skatteministeriets satsoversigt: vejafgift ca. 0,91 kr./km for diesel (CO2-klasse 3, over 32 t) og 0,13 kr./km for el (CO2-klasse 5), vægtafgift ca. 2.709 kr./år for luftaffjedret trækker og ca. 809 kr./år for en ca. 18 t distributionsbil, og elafgiften er midlertidigt sænket til 0,008 kr./kWh i 2026–27.</p>
+    <p class="kilde">22. nov 2026 · Lov om vejafgift (LTA 763/2023), satsoversigten på svm.dk og skat.dk</p>
+  </div>
+
+  <div class="sbox" style="margin:12px 0; padding:12px;">
+    <p><strong><span aria-hidden="true">ℹ️</span> Sådan læser du listen</strong></p>
+    <p><span class="badge nyt">NYT</span>= nyt indhold på siden. <span class="badge praecis">PRÆCISERET</span>= et tal er kontrolleret og gjort mere præcist. Alle tal på siden er senest kontrolleret den 22. november 2026 – se panelet Kilder for, hvad du selv kan holde opdateret.</p>
+  </div>
+</div>
+
+<footer id="kilder" data-panel="kilder">
+  <div class="sbox" style="margin:12px 0; padding:12px;">
+    <strong><span aria-hidden="true">🗓️</span> Hvor friske er tallene?</strong>
+    <div id="dataAge" class="hint" style="margin:6px 0 8px; font-size:.95em;"></div>
+    <em class="hint">Siden gennemgås automatisk en gang om måneden – både priser, afgifter og lastbilerne – og datostemplet ovenfor viser altid det seneste tjek. Faglige ændringer (regler, tal og sanktioner) samles i fanen <em>🔄 Opdateringer</em>, nyeste først. Listen herunder kan også bruges som manuel kontrol eller som mini-opgave til klassen.</em>
+    <strong>Månedligt tjek – 5 minutter:</strong> Tjek disse tal, hvis du selv vil være med:
+    <ul style="margin:6px 0 0; padding-left:18px">
+      <li><b>Dieselprisen</b> (modellen bruger 10 kr./l) – find dagenspris hos <a href="https://tankpriser.dk/danmark/braendstof/diesel" target="_blank">TankPriser.dk (landsgennemsnit)</a> eller din lokale tank</li>
+      <li><b>Ladepriserne</b> (0,75 kr./kWh depot · 2,50 kr./kWh hurtiglader) – tjek ladenetværkernes priser (fx E.ON, Shell Recharge)</li>
+      <li><b>Vejafgiftssatserne</b> (0,91/0,13 kr./km) – tjek <a href="https://vejafgifter.dk/" target="_blank">vejafgifter.dk</a> for årets satser</li>
+      <li><b>Elmix-CO2</b> (0,2 kg CO2/kWh) – tjek Energistyrelsens opgørelse for det danske elnet</li>
+      <li><b>Nye lastbilmodeller</b> – følger fabrikkerne op med større batterier eller billigere priser? Se fagpressen (fx lastbilmagasinet.dk, trans.info)</li>
+    </ul>
+  </div>
+  <strong>📌 Om materialet:</strong> Lastbilerne er rigtige modeller fra det europæiske marked. Nøgletallene (batteri, rækkevidde, ladning og forbrug) bygger på producenternes og fagpressens oplysninger, men er i modellen omregnet til enkle undervisningsværdier – ikke officielle firmadata. VURDERINGSKRITERIERNE (miljø, økonomi, kvalitet, arbejdsmiljø) stammer fra det didaktiske materiale "Bæredygtighed på GF2 Transport" (progressionsmodellen OM → FOR → SOM → faglig identitet).<br><br>
+  <strong>Opplyste nøgletal:</strong><br>
+  Volvo FM Electric: 540 kWh (6 × 90 kWh), rækkevidde op til 380 km, AC 10 t / DC ca. 2 t (<a href="https://www.transportmagasinet.dk/article/view/865639/test_forste_elektriske_volvo_fm_i_danmark" target="_blank" rel="noopener">Transportmagasinet: Test – første elektriske Volvo FM i Danmark</a>, <a href="https://www.volvotrucks.com/en-en/trucks/electric/volvo-fm-electric.html" target="_blank" rel="noopener">Volvo Trucks</a>)<br>
+  Scania 45R/45S: 624 kWh, ca. 350 km ved ca. 40 t, CCS op til 375 kW (<a href="https://www.scania.com/group/en/home/products-and-services/trucks/battery-electric-truck.html" target="_blank" rel="noopener">Scania Group: Battery electric trucks</a>, <a href="https://electrek.co/2022/06/13/scania-regional-long-haul-electric-truck/" target="_blank" rel="noopener">Electrek</a>)<br>
+  Mercedes-Benz eActros 600: 621 kWh installeret, op til 500 km, 400 kW CCS (<a href="https://truckbusworld.com/en/models/mercedes-benz-eactros-600/" target="_blank" rel="noopener">TruckBusWorld</a>, <a href="https://www.mercedes-benz-trucks.com/int/en/trucks/eactros.html" target="_blank" rel="noopener">Mercedes-Benz Trucks</a>). Realtals-forbrug for el-trækker ca. 0,9–1,0 kWh/km (<a href="https://www.oeko.de/fileadmin/oekodoc/Real-world-data-analysis-of-battery-electric-trucks.pdf" target="_blank" rel="noopener">Öko-Institut: Real-world data analysis</a>)<br>
+  MAN eTGX: op til 480 kWh, op til 570 km (<a href="https://www.man.eu/global/en/truck/all-models/the-man-tgx/the-man-etgx/overview.html" target="_blank" rel="noopener">MAN Truck &amp; Bus</a>)<br>
+  Volvo FH 460 I-Save: ca. 21,5 l/100 km i landevejstest; Scania R: ca. 25 l/100 km typisk snit (<a href="https://www.truck1.eu/blog/volvo-fh-vs-scania-r-series-long-haul-truck-comparison-t36030" target="_blank" rel="noopener">Truck1: Volvo FH vs Scania R</a>, <a href="https://www.volvotrucks.dk/da-dk/news/pressemeddelelser/2022/dec/volvo-trucks-reducerer-braendstofforbruget-i-vej-test.html" target="_blank" rel="noopener">Volvo Trucks DK</a>)<br>
+  MAN TGX-tal er typisk intervaller – tjek selv på <a href="https://www.man.eu" target="_blank" rel="noopener">man.eu</a><br>  Temperaturtillæg (el +7–35 %, diesel +2–12 %) og den nedsatte brugbare batterikapacitet (0–10 % mindre i kulden) er undervisningsværdier bygget på europæiske målinger: tyske målinger på 19 rigtige el-lastbiler i drift viste ca. +0,13 kWh/km ekstra forbrug pr. 10 °C temperaturfald (<a href="https://www.oeko.de/fileadmin/oekodoc/Real-world-data-analysis-of-battery-electric-trucks.pdf" target="_blank" rel="noopener">Öko-Institut/TUM</a>), og ICCT analyserede i august 2025 91 europæiske el-lastvogne i reel drift: forbrug 92–150 kWh/100 km – ret i øvelsens interval (<a href="https://trans.info/en/electric-lorries-study-417142" target="_blank" rel="noopener">ICCT via trans.info</a>). El-lastbilen har ingen motor-spildvarme, så kabinevarmen går ud over batteriet, og lithium-celler leverer og modtager selv mindre energi, når de er kolde – også batteriet selv er altså kulde-påvirket. Diesel-tabene i kulde (kold motor, vinterkørsel) er sat konservativt, da langtursbiler holder motoren varm store dele af dagen. Find også selv tal fra vinterkørselstests i fagpressen – lav gerne jeres eget bud i klassen<br>  Tankpistoler: typisk ca. 40–60 l/min., højtflow-pistoler til lastbiler op til 280 l/min. (<a href="https://cogetil.dk/produkter/pumpeudstyr-diesel-benzin-adblue/pistoler/diesel-pistoler" target="_blank" rel="noopener">Cogetil: Diesel-pistoler</a>). Tankstørrelserne (600–700 l) er undervisningsværdier – rigtige langturs-trækkere fås med flere tanke og over 1.000 l i alt, så tjek selv den aktuelle bil<br>  <b>EU-verifikation i realtid (rapporten læst i fuldtekst):</b> Modellen regner med 100–150 kWh/100 km for el – ICCT (aug. 2025) fulgte 91 europæiske el-trækkere i reel drift (ECTA-flåder): forbrug 92–150 kWh/100 km, typisk 107–116, lasten største enkeltfaktor, regenerativ bremsning i snit 19 % (op til 32 %), rækkevidden 11–19 % højere end producenternes tal, gennemsnitligt batteri 530 kWh installeret, hvoraf kun ca. 70 % kunne bruges i drift – for fabrikkerne bygger selv reserve ind i det brugbare antal kWh. Derfor viser øvelsen "installeret" og "brugbar" som fabrikkens to forskellige tal, og netto-tallene er undervisningsværdier bygget på producenternes opgivne brugbare kWh – tjek selv den aktuelle model. I reel drift ladede flåderne gennemsnitligt med kun 43 kW (depot-ladning), mens DC-hurtigladere i dag går op til 350 kW (CCS2) (<a href="https://theicct.org/wp-content/uploads/2025/08/ID-359-%E2%80%93-EU-goods-transport_report_final.pdf" target="_blank" rel="noopener">ICCT-rapporten</a>, <a href="https://trans.info/en/electric-lorries-study-417142" target="_blank" rel="noopener">trans.info om ICCT</a>)<br>  <b>Ladekurver:</b> middel-ladeeffekterne (150–320 kW) er undervisningsværdier bygget på producenternes angivne topeffekter (FM Electric DC-ca. 2 t, Scania 45R CCS 375 kW, eActros 600 CCS 400 kW, MAN eTGX el-trækker). En reel ladekurve falder, når batteriet bliver fyldigere – derfor er middeltallet lavere end toptallet. Tallene gør det muligt at regne kWh pr. pause i hånden (effekt × tid)<br><br>
+  <strong>Afgifter (2026-satser):</strong><br>
+  Vejafgift (km-afgift for lastbiler 12 t og derover): satser pr. CO2-emissionsklasse og totalvægt – diesel bruges her: 0,91 kr./km (klasse 3, vogntog over 32 t), el: 0,13 kr./km (klasse 5). Bemærk: den enkelte bills nøjagtige klasse afhænger af dens målte CO2 pr. tonkm – tjek bilen på vejafgift.dk (<a href="https://svmn.dk/tal-og-metode/satser/satser-og-beloebsgraenser-i-lovgivningen/vejafgiftsloven" target="_blank" rel="noopener">Skatteministeriets satsoversigt: Lov om vejafgift</a>, <a href="https://vejafgifter.dk/" target="_blank" rel="noopener">vejafgifter.dk</a>, <a href="https://www.retsinformation.dk/eli/lta/2023/763" target="_blank" rel="noopener">Lov om vejafgift, lov nr 763 af 13/06/2023</a>)<br>
+  Vægtafgift: luftaffjedret trækker/vogntog over 29 t ca. 2.709 kr./år og ca. 18 t distributionsbil ca. 809 kr./år (2026) (<a href="https://svmn.dk/tal-og-metode/satser/satser-og-beloebsgraenser-i-lovgivningen/vaegtafgiftsloven" target="_blank" rel="noopener">Skatteministeriets satsoversigt: Vægtafgiftsloven</a>)<br>
+  Brændstofforbruget: dieselprisen (10 kr./l) rummer energiafgift, CO2-afgift og NOx-afgift – i undervisningsniveau; elafgiften er midlertidigt sænket til 0,008 kr./kWh i 2026-27 (<a href="https://skat.dk/erhverv/afgifter-paa-varer-og-ydelser-punktafgifter/nyhedsbrev-afgifter/midlertidig-nedsaettelse-af-elafgiften-i-2026-og-2027" target="_blank" rel="noopener">skat.dk om elafgiften</a>)<br>
+  Ladepriser: depot-prisen 0,75 kr./kWh (eget ladenetværk/nat i depotet) og hurtigladeprisen 2,50 kr./kWh er undervisningsværdier – find selv aktuelle priser hos ladenetværkerne (fx E.ON, Shell Recharge, FriCharger) og sammenlign.<br>
+  <strong>Arbejdsmiljø:</strong><br>
+  Støj-tallene i "Dit valg" bygger på målinger foretaget af Peutz Consult med Fraunhofer IML for MAN (juli 2023): el-lastbilen var ca. 6 dB(A) lavere end en diesel af samme klasse ved 20 km/t og ca. 12 dB lavere ved acceleration – oplevet som ca. halv lydstyrke, især i byer (<a href="https://press.mantruckandbus.com/corporate/man-etrucks-only-about-half-as-loud-as-comparable-diesel-trucks/" target="_blank" rel="noopener">MAN Presse/Fraunhofer-målingerne</a>). Mindre støj og vibration giver mindre træthed hos chaufføren – dansk erfaring i reel drift: DSV-chauffør Michael Nielsen (<a href="https://greenpowerdenmark.dk/nyheder/ellastbilen-giver-mig-ro-hovedet" target="_blank" rel="noopener">Green Power Denmark</a>) og Peder Olsen &amp; Søn (<a href="https://businessreview.dk/transport-logistik/tid-til-opgoer-med-fordomme-om-el-lastbiler" target="_blank" rel="noopener">Business Review</a>), hvor "chaufførernes hviletid og ventetid bliver til ladetid". Helkrops-vibration og langvarig sitting som risikofaktorer: <a href="https://oshwiki.osha.europa.eu/en/themes/driving-work-and-msds" target="_blank" rel="noopener">EU-OSHA OSHwiki</a>; træthed hos europæiske chauffører: <a href="https://www.etf-europe.org/campaigns/day-against-driver-fatigue" target="_blank" rel="noopener">ETF</a>. Bemærk: om ladetid tæller som hviletid eller arbejdstid er endnu ikke endeligt afklaret i EU (forordning 561/2006 kræver uafbrudt hvile) – se <a href="https://trans.info/en/electric-truck-charging-3-478349" target="_blank" rel="noopener">trans.info om hviletid og ladning</a> og <a href="https://trans.info/en/charging-time-work-423525" target="_blank" rel="noopener">trans.info om debatten</a><br>
+  <strong>Kvalitet (punktlighed):</strong> tiderne i "Dit valg" bygger på de samme køre- og hviletidsregler som resten af øvelsen – 45-min pausen efter 4½ times kørsel gør det muligt at lægge ladestoppene i pausen, så punktligheden afhænger af god ruteplanlægning frem for drivkraften (<a href="https://www.retsinformation.dk/eli/lta/2025/4" target="_blank" rel="noopener">BEK nr 4 af 08/01/2025 om køre- og hviletid</a>, <a href="https://eur-lex.europa.eu/EN/legal-content/summary/driving-time-and-rest-periods-in-the-road-transport-sector.html" target="_blank" rel="noopener">EUR-Lex: Køre- og hviletid</a>)<br>
+  Købspriser i "vugge til grav"-regnestykket er typiske undervisningsværdier (diesel-trækker ca. 800.000 kr., el-trækker ca. 1,9–2,4 mio. kr.) – så en prissøgning hos forhandleren er en del af opgaven. At TCO (Total Cost of Ownership) er det rigtige regnestykke for vognmanden underbygges af DTL/COWI: <a href="https://dtl.eu/nyheder-og-presse/nyheder/ellastbiler-lonner-sig-bedre-end-dieselbiler/" target="_blank" rel="noopener">DTL: Ellastbiler lønner sig bedre end dieselbiler (COWI TCO, sep. 2025)</a><br><br>
+  <strong>Øvrige kilder:</strong><br>
+  CO2-faktor diesel (2,68 kg CO2 pr. liter) – Energistyrelsens emissionsfaktorer · CO2 pr. kWh i dansk elnet ca. 0,1–0,2 kg (her bruges 0,2 som forsigtig værdi) – Energistyrelsens elmixopgørelser<br>
+  <a href="https://www.retsinformation.dk/eli/lta/2025/4" target="_blank" rel="noopener">BEK nr 4 af 08/01/2025 om køre- og hviletidsbestemmelserne i vejtransport</a>
+</footer>
+
+<script>
+(function () {
+  // DOM-cache: getElementById kaldes kun een gang pr. id
+  var els = {};
+  function $(id) { return els[id] || (els[id] = document.getElementById(id)); }
+
+  // Fælles undervisningstal
+  var CO2_D = 2.68, CO2_E = 0.2, P_D = 10, P_E = 0.75, P_FAST = 2.50, TMAX = 34;
+  var PUMP = 60; // liter pr. min. fra en tankpistol til lastbiler (undervisningsværdi – alm. pistol ca. 40–60, højtflow op til 280)
+  // Lade-tilstand: "auto" (batteriets energi fra depotet, resten fra hurtiglader),
+  // "depot" (alt lades i depotet), "rute" (alt på hurtiglader). Vælges under Byg din rute.
+  // Pause-ladning: chaufførens 45-min pause kan dække det meste af ladetiden på ruten,
+  // og ved depotet under 11-timers hviletid er der god tid til langsom ladning.
+  var CHARGE_MODE = "auto";
+  var BREAK_MIN = 45;
+  var USE_BREAK = true;
+  // Temperaturens indflydelse paa forbruget (undervisningsværdi): el-lastbilen har ikke motorens
+  // spildvarme til kabinen - om vinteren laves varmen af batteriet, og kulde sender ogsaa strøm paa
+  // at holde batteriet varmt. Diesel kan bruge noget af motorens spildvarme, derfor mindre tillæg.
+  var TEMP = 20;
+  var TEMP_FACT_D = { "20": 1.00, "10": 1.02, "0": 1.07, "-10": 1.12 };
+  // SCENARIER: hvad skal der til, foer el vinder regnskabet? Vaelges under Udgifter.
+  // pe = depot-strømpris i scenariet (null = brug modellens P_E), buyMul = faktor paa el-lastbilens koebspris.
+  var SCEN = { pe: null, buyMul: 1.00, key: "nu" };
+  var SCEN_TXT = {
+    nu:  "Udgangspunktet: depot-strøm à 0,75 kr./kWh og hurtiglader à 2,50 kr./kWh – regnskabet, som modellen hidtil har vist det.",
+    sol: "Vognmanden sætter egne standere op, lægger solceller på lagerhallen og kobler et lagringsbatteri til: han producerer selv strøm og skal kun købe lidt fra nettet. Undervisningsværdi: ca. 0,45 kr./kWh – prøv at se, hvad det gør ved el-rækkerne i tabellerne!",
+    nat: "Smart nat-ladning: bilerne lades om natten, når strømmen er grøn og billig (dynamisk tariffer) – og deltidspris gør, at man holder sig fra spidsbelastning. Undervisningsværdi: ca. 0,55 kr./kWh, og strømmen er grønnere, når den lades.",
+    frem: "Fremtidsscenarium ca. 2030: batterier er blevet billigere (anskaffelse -35 %), el-bilerne er blevet mere vanlige, og strømmen er billigere (ca. 0,35 kr./kWh). MCS-ladning (1 MW) gør ladestoppet kortere. Hvad sker der med regnskabet – og vinder el allerede på CO2?" };
+  var TEMP_FACT_E = { "20": 1.00, "10": 1.07, "0": 1.20, "-10": 1.35 };
+  // Og batteriet SELV er kolde-foeligt: lithium-celler leverer mindre brugbar energi ved lave
+  // temperaturer (og tager imod ladning langsommere, indtil de er varme). Derfor regner modellen
+  // ogsaa med mindre BRUGBART batteri om vinteren (undervisningsværdi):
+  var BATT_FACT_E = { "20": 1.00, "10": 0.98, "0": 0.95, "-10": 0.90 };
+  var SCEN_PE = { nu: null, sol: 0.45, nat: 0.55, frem: 0.35 };
+
+  // RIGTIGE LASTBILER FRA MARKEDET
+  // cTom/cFuld = forbrug tom/fuld last (diesel: l/100km, el: kWh/km)
+  // batt = installeret kWh, netto = fabrikantens BRUGBARE kWh (det chaufføren reelt kan bruge)
+  // netto-tallene er undervisningsværdier bygget paa producenternes opgivne tal - tjek den aktuelle model
+  // tank = typisk tankstørrelse i liter (undervisningsværdi – tjek selv den aktuelle bil), chgKw = middel-ladeeffekt
+  // VUGGE TIL GRAV: buy = typisk købspris kr (undervisningsværdi – tjek selv), rest = restværdi-andel, life = levetid i km
+  var TRUCKS = [
+    { id: "fh460", name: "Volvo FH 460 I-Save", fuel: "diesel", emoji: "🛢️", seg: "langtur",
+      cTom: 19, cFuld: 29, tank: 600, toll: 0.91, taxYear: 2709, buy: 800000, rest: 0.15, life: 700000, spec: "Diesel · tank op til 600 l · ca. 21,5 l/100 km i landsvejstest · klassisk langturs-trækker" },
+    { id: "r500", name: "Scania R 500", fuel: "diesel", emoji: "🛢️", seg: "langtur",
+      cTom: 22, cFuld: 32, tank: 700, toll: 0.91, taxYear: 2709, buy: 800000, rest: 0.15, life: 700000, spec: "Diesel · tank op til 700 l · ca. 25 l/100 km typisk snit · langturs-klassiker" },
+    { id: "tgx", name: "MAN TGX 15.480", fuel: "diesel", emoji: "🛢️", seg: "langtur",
+      cTom: 21, cFuld: 31, tank: 700, toll: 0.91, taxYear: 2709, buy: 780000, rest: 0.15, life: 700000, spec: "Diesel · tank op til 700 l · typisk interval 21–31 l/100 km · tjek selv aktuelt tal" },
+    { id: "fme", name: "Volvo FM Electric", fuel: "el", emoji: "⚡", seg: "distribution/regional",
+      cTom: 1.1, cFuld: 1.6, batt: 540, netto: 460, chargeMin: 120, chgKw: 150, toll: 0.13, taxYear: 809, buy: 1600000, rest: 0.10, life: 400000,
+      spec: "540 kWh installeret · op til 380 km · DC-opladning ca. 1–2 t (middel ca. 150 kW = ca. 110 kWh på 45 min) · bygget til distribution" },
+    { id: "s45r", name: "Scania 45R", fuel: "el", emoji: "⚡", seg: "regional/langtur",
+      cTom: 1.2, cFuld: 1.8, batt: 624, netto: 530, chargeMin: 60, chgKw: 250, toll: 0.13, taxYear: 2709, buy: 1900000, rest: 0.10, life: 700000,
+      spec: "624 kWh · ca. 350 km ved ca. 40 t · hurtiglader op til 375 kW · middel ca. 250 kW = ca. 190 kWh på 45-min pausen" },
+    { id: "eactros", name: "Mercedes-Benz eActros 600", fuel: "el", emoji: "⚡", seg: "langtur",
+      cTom: 1.0, cFuld: 1.5, batt: 621, netto: 530, chargeMin: 45, chgKw: 320, toll: 0.13, taxYear: 2709, buy: 2400000, rest: 0.10, life: 700000,
+      spec: "621 kWh · op til 500 km · hurtiglader op til 400 kW · middel ca. 320 kW = ca. 240 kWh på 45-min pausen · Årets Lastbil 2025" },
+    { id: "etgx", name: "MAN eTGX", fuel: "el", emoji: "⚡", seg: "langtur",
+      cTom: 1.0, cFuld: 1.5, batt: 480, netto: 410, chargeMin: 60, chgKw: 300, toll: 0.13, taxYear: 2709, buy: 2000000, rest: 0.10, life: 700000,
+      spec: "op til 480 kWh · op til 570 km · middel ca. 300 kW = ca. 225 kWh på 45-min pausen · el-trækker til langtur" }
+  ];
+  var truckById = {}, D_TRUCKS = [], E_TRUCKS = [];
+  TRUCKS.forEach(function (t) { truckById[t.id] = t; (t.fuel === "diesel" ? D_TRUCKS : E_TRUCKS).push(t); });
+
+  // Hver rute køres af BEGE drivkræfter: én diesel-lastbil + én el-lastbil (route.d / route.e)
+  var A = { d: "fh460", e: "s45r", steps: [ { km: 180, v: 70, t: 17 }, { km: 180, v: 70, t: 17 } ] };
+  var B = { d: "r500", e: "eactros", steps: [ { km: 320, v: 75, t: 32 } ] };
+
+  var daDK = function (n) { return Math.round(n).toLocaleString("da-DK"); };
+
+  // v1: gem elevens arbejde i localStorage, så intet forsvinder ved genindlæsning
+  var STORE_KEY = "ruteLaeringV1";
+  var LAST = null; // seneste regnede resultater, bruges af "Kopiér begrundelse og tal"
+  function persist() {
+    try {
+      var reflEl = document.getElementById("refl");
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        A: { d: A.d, e: A.e, steps: A.steps }, B: { d: B.d, e: B.e, steps: B.steps },
+        ladning: CHARGE_MODE, temp: TEMP, pause: USE_BREAK, crit: CRIT_SEL, scen: SCEN.key,
+        refl: reflEl ? reflEl.value : ""
+      }));
+    } catch (err) { }
+  }
+  function restore() {
+    try {
+      var s = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+      if (!s) return;
+      if (s.A && truckById[s.A.d] && truckById[s.A.e] && s.A.steps && s.A.steps.length) { A.d = s.A.d; A.e = s.A.e; A.steps = s.A.steps; }
+      if (s.B && truckById[s.B.d] && truckById[s.B.e] && s.B.steps && s.B.steps.length) { B.d = s.B.d; B.e = s.B.e; B.steps = s.B.steps; }
+      if (s.ladning) { CHARGE_MODE = s.ladning; var l = document.getElementById("ladning"); if (l) l.value = s.ladning; }
+      if (typeof s.temp !== "undefined") { TEMP = s.temp + ""; var tp = document.getElementById("temp"); if (tp) tp.value = s.temp; }
+      if (typeof s.pause === "boolean") { USE_BREAK = s.pause; var pl = document.getElementById("pauseLad"); if (pl) pl.checked = s.pause; }
+      if (typeof s.crit === "number" && CRIT[s.crit]) {
+        CRIT_SEL = s.crit;
+        var cw = document.getElementById("crit");
+        if (cw) Array.prototype.forEach.call(cw.querySelectorAll("button"), function (bt, i) { bt.classList.toggle("on", i === CRIT_SEL); });
+      }
+      if (s.scen && SCEN_TXT[s.scen]) {
+        var sc = document.getElementById("scen"); if (sc) sc.value = s.scen;
+        SCEN.key = s.scen; SCEN.pe = SCEN_PE[s.scen]; SCEN.buyMul = s.scen === "frem" ? 0.65 : 1.00;
+        var nt = document.getElementById("scenNote"); if (nt) nt.textContent = SCEN_TXT[s.scen];
+      }
+      if (typeof s.refl === "string" && s.refl) { var rf = document.getElementById("refl"); if (rf) rf.value = s.refl; }
+    } catch (err) { }
+  }
+
+  function calc(route, truckId) {
+    var tk = truckById[truckId];
+    var km = 0, energy = 0, min = 0, chargeStops = 0, fastKwh = 0;
+    var capUse = tk.fuel === "el" ? tk.netto * BATT_FACT_E[TEMP] : 0; // brugbar kapacitet: fabrikantens netto-tal x temperatur
+    var remaining = tk.fuel === "el" ? capUse : Infinity;                           // rest-energi paa ruten
+    var perStopKwh = tk.fuel === "el" ? Math.min(capUse, (tk.chgKw || 0) * tk.chargeMin / 60) : 0; // kWh pr. ladestop
+    var isD = tk.fuel === "diesel";
+    var tempF = isD ? TEMP_FACT_D[TEMP] : TEMP_FACT_E[TEMP];
+    route.steps.forEach(function (s) {
+      km += s.km;
+      min += s.km / s.v * 60;
+      var use = isD
+        ? s.km / 100 * (tk.cTom + (s.t / TMAX) * (tk.cFuld - tk.cTom))  // liter
+        : s.km * (tk.cTom + (s.t / TMAX) * (tk.cFuld - tk.cTom));      // kWh
+      use *= tempF; // kulde = mere forbrug
+      if (!isD) {
+        // NB: et koldt batteri lader ogsaa langsommere i starten - modellen regner dog med fast middel-effekt
+        while (use > remaining && perStopKwh > 0) { chargeStops++; remaining += perStopKwh; } // ladestop paa ruten
+        var overNetto = energy + use > capUse ? Math.min(use, energy + use - capUse) : 0;
+        if (CHARGE_MODE === "rute") fastKwh += use;
+        else if (CHARGE_MODE === "auto" && chargeStops > 0) fastKwh += Math.min(use, overNetto === 0 ? use : overNetto);
+        remaining -= use;
+      }
+      energy += use;
+    });
+    // Pauser og ladning: pausen (45 min) skal holdes alligevel - ladning deri koster ingen ekstra tid.
+    // Foerst naar ladetiden overstiger pausetiden, kommer der reelt mer-tid.
+    var extraPerStop = USE_BREAK ? Math.max(0, tk.chargeMin - BREAK_MIN) : tk.chargeMin;
+    min += (isD ? 0 : chargeStops * extraPerStop);
+    var effPe = SCEN.pe === null ? P_E : SCEN.pe; // depot-strømpris i det valgte scenarie
+    var price = isD
+      ? energy * P_D
+      : (CHARGE_MODE === "depot" ? energy * effPe : energy * effPe + fastKwh * (P_FAST - effPe));
+    var tollTotal = km * tk.toll;              // vejafgift pr. tur (hele ruten regnes afgiftspligtig)
+    var taxTotal = km * (tk.taxYear / 100000); // vægtafgift omregnet pr. km (100.000 km/år)
+    var buyKm = tk.buy * SCEN.buyMul * (1 - tk.rest) / tk.life; // anskaffelse (scenarie-faktor, minus restværdi) fordelt pr. km
+    var buyTotal = km * buyKm;                    // anskaffelses-andel pr. tur
+    return {
+      tk: tk, km: km, energy: energy, min: min, stops: chargeStops, fastKwh: fastKwh, extraPerStop: extraPerStop,
+      price: price, toll: tollTotal, tax: taxTotal, buy: buyTotal, buyKm: buyKm,
+      total: price + tollTotal + taxTotal,          // DRIFT pr. tur
+      kwh45: isD ? null : Math.round((tk.chgKw || 0) * BREAK_MIN / 60),      // kWh ladet i chauffoerens 45-min pause
+      refuelMin: isD ? Math.ceil(energy / PUMP) : null,                     // min. ved pumpen for turens liter
+      tempF: tempF,                 // temperaturfaktor paa forbruget
+      netUse: isD ? null : Math.round(capUse), // brugbar batterikap. i aktuel temperatur og reserve
+      tankFullMin: isD ? Math.ceil((tk.tank || 0) / PUMP) : null,           // min. for en hel tank
+      chargePerStop: isD ? null : Math.round(perStopKwh),
+      totalLife: price + tollTotal + taxTotal + buyTotal, // VUGGE TIL GRAV pr. tur
+      co2: energy * (isD ? CO2_D : CO2_E)
+    };
+  }
+
+  function fmtTime(min) {
+    // afrund foerst, saa minutterne aldrig bliver 60 ("2 t 60 min")
+    var m = Math.round(min), h = Math.floor(m / 60); m = m % 60;
+    return h + " t " + (m < 10 ? "0" : "") + m + " min";
+  }
+
+  function buildPicker(pickId, route, key) {
+    var el = $(pickId);
+    function sel(field, label, list) {
+      var h = ["<label style='font-size:.85em; color:#555; display:block; margin-top:6px;'>", label, "</label><select data-f='", field, "'>"];
+      for (var i = 0; i < list.length; i++) {
+        var t = list[i];
+        h.push('<option value="', t.id, '"', (route[field] === t.id ? " selected" : ""), ">", t.emoji, " ", t.name, " – ", t.seg, "</option>");
+      }
+      h.push("</select><div class='truckspec' id='spec", key, field, "'>", truckById[route[field]].spec, "</div>");
+      return h.join("");
+    }
+    el.innerHTML = sel("d", '<span aria-hidden="true">🛢️</span> Vælg diesel-lastbilen:', D_TRUCKS) + sel("e", '<span aria-hidden="true">⚡</span> Vælg el-lastbilen:', E_TRUCKS);
+    Array.prototype.forEach.call(el.querySelectorAll("select"), function (s) {
+      s.addEventListener("change", function () {
+        var field = s.getAttribute("data-f");
+        route[field] = s.value;
+        els["spec" + key + field] = document.getElementById("spec" + key + field); // opdater cache
+        $("spec" + key + field).textContent = truckById[s.value].spec;
+        evaluate();
+      });
+    });
+  }
+
+  function build(tblId, route) {
+    var t = $(tblId);
+    var h = ["<tr><th>Etape</th><th>km</th><th>km/t</th><th>last (t)</th><th><span class=\"hint\">fjern</span></th></tr>"];
+    for (var i = 0; i < route.steps.length; i++) {
+      var s = route.steps[i];
+      h.push('<tr><td>', (i + 1), '</td><td><input data-i="', i, '" data-f="km" type="number" min="1" step="10" value="', s.km, '"></td>',
+        '<td><input data-i="', i, '" data-f="v" type="number" min="30" max="90" step="5" value="', s.v, '"></td>',
+        '<td><input data-i="', i, '" data-f="t" type="number" min="0" max="34" step="1" value="', s.t, '"></td>',
+        '<td><button type="button" class="del" data-i="', i, '" title="Fjern etape ', (i + 1), '" aria-label="Fjern etape ', (i + 1), '">×</button></td></tr>');
+    }
+    t.innerHTML = h.join("");
+    Array.prototype.forEach.call(t.querySelectorAll("input"), function (inp) {
+      // debounce: undgaa at genbygge alle paneler ved hvert enkelt tegn
+      inp.addEventListener("input", function () {
+        clearTimeout(inp._t);
+        inp._t = setTimeout(function () {
+          var i = +inp.getAttribute("data-i"), f = inp.getAttribute("data-f"), val = +inp.value || 0;
+          route.steps[i][f] = f === "v" ? Math.max(30, Math.min(90, val)) : Math.max(f === "km" ? 1 : 0, val); // km mindst 1: ellers division med 0
+          evaluate();
+        }, 250);
+      });
+    });
+    Array.prototype.forEach.call(t.querySelectorAll("button.del"), function (btn) {
+      btn.addEventListener("click", function () {
+        if (route.steps.length > 1) { route.steps.splice(+btn.getAttribute("data-i"), 1); build(tblId, route); evaluate(); }
+      });
+    });
+  }
+
+  function evaluate() {
+    // Hver rute regnes for BEGE drivkræfter – diesel (d) og el (e)
+    var ad = calc(A, A.d), ae = calc(A, A.e), bd = calc(B, B.d), be = calc(B, B.e);
+    LAST = { ad: ad, ae: ae, bd: bd, be: be };
+    persist();
+
+    function rows(r) {
+      var tk = r.tk, isD = tk.fuel === "diesel";
+      var o = [];                      // output bygges som array + join – hurtigst ved lange strenge
+      var mark = "<span style='font-size:.8em;color:#595959'>";
+      var extra = isD
+        ? "<div>Tank: <b>op til " + tk.tank + " l</b> 🛢️ (tjek selv den aktuelle bil)</div>" +
+          "<div>Tankpistol: <b>ca. 60 l/min</b> → fuld tank på ca. " + r.tankFullMin + " min.</div>" +
+          "<div>Denne tur: <b>" + Math.round(r.energy) + " l = ca. " + r.refuelMin + " min.</b> ved pumpen</div>"
+        : "<div>Batteri: <b>" + tk.batt + " kWh</b> installeret · brugbar: <b>" + tk.netto + " kWh</b> (fabrikkens tal)" +
+          (TEMP <= 0 ? " – ved ca. " + TEMP + " °C kun ca. <b>" + r.netUse + " kWh brugbar</b> (koldt batteri leverer mindre) ⚡" : " ⚡") + "</div>" +
+          "<div>Ladestop: <b>" + (r.stops === 0 ? "ingen – batteriet rækker 🎉" :
+            r.stops + " × " + tk.chargeMin + " min · " + r.chargePerStop + " kWh pr. stop" + (USE_BREAK ? " – pausen dækker 45 min, så kun " + r.stops + " × " + r.extraPerStop + " min ekstra tid" : "")) + "</b></div>" +
+          "<div>Ladekurve: <b>ca. " + tk.chgKw + " kW i snit</b> → 45-min pausen giver ca. <b>" + r.kwh45 + " kWh</b> = ca. " + (r.kwh45 / (r.energy / r.km)).toFixed(0) + " km ekstra rækkevidde</div>";
+      o.push('<div class="stat">',
+        "<div>Drivkraft: <b>", (isD ? '<span aria-hidden="true">🛢️</span> DIESEL' : '<span aria-hidden="true">⚡</span> EL'), "</b></div>",
+        "<div>Lastbil: <b>", tk.emoji, " ", tk.name, "</b></div>",
+        "<div>Distance: <b>", Math.round(r.km), " km</b></div>",
+        "<div>Køretid: <b>", fmtTime(r.min), (r.stops ? " (inkl. ladning)" : ""), "</b></div>",
+        "<div>Temperatur: <b>ca. ", TEMP, " °C</b> → forbrug ", (r.tempF === 1 ? "normalt" : "<b>+" + Math.round((r.tempF - 1) * 100) + " %</b> (" + (isD ? "kold motor og vinterkørsel" : "kabinevarme trækker strøm, og batteriet leverer selv mindre i kulden") + ")"), "</div>",
+        "<div>", (isD ? "Brændstof" : "Strøm brugt på ruten"), ": <b>", Math.round(r.energy), isD ? " l diesel</b>" : " kWh</b>", "</div>",
+        "<div>Pris: <b>", Math.round(r.price), " kr.</b>",
+        (isD ? "" : " " + mark + "(" +
+          (CHARGE_MODE === "rute" ? "à 2,50 kr./kWh på ruten" :
+           CHARGE_MODE === "depot" ? "à 0,75 kr./kWh i depotet" :
+           Math.round(r.fastKwh) + " kWh à 2,50 på hurtiglader, resten à 0,75") + ")</span>"), "</div>",
+        "<div>CO2: <b>", Math.round(r.co2), " kg</b> ", mark, "(", (r.co2 / 1000).toFixed(2), " t)</span></div>",
+        "<div>Vejafgift: <b>", Math.round(r.toll), " kr.</b> ", mark, "(", tk.toll.toFixed(2).replace(".", ","), " kr./km)</span></div>",
+        "<div>Vægtafgift-andel: <b>", Math.round(r.tax), " kr.</b> ", mark, "(", tk.taxYear, " kr./år ÷ 100.000 km)</span></div>",
+        "<div style='grid-column:1/-1; border-top:1px solid #E4EAF2; margin-top:2px; padding-top:4px;'>TOTAL PR. TUR: <b>", Math.round(r.total), " kr.</b> ", mark, "(energi + vejafgift + vægtafgift)</span></div>",
+        "<details style=\"grid-column:1/-1; margin-top:6px\"><summary style=\"cursor:pointer; color:#16588E; font-size:.88em; font-weight:600\">📋 Detaljer: tank/batteri, tankning, ladning og ladekurve</summary>", extra, "</details>", "</div>");
+      return o.join("");
+    }
+    function head(letter, r) {
+      return letter + (r.tk.fuel === "diesel" ? ' på <span aria-hidden="true">🛢️</span> diesel: ' : ' på <span aria-hidden="true">⚡</span> el: ') + r.tk.name;
+    }
+    var html = ['<div class="routes">',
+      '<div class="route"><h4>', head("🅰 Rute A", ad), "</h4>", rows(ad), "</div>",
+      '<div class="route', (ae.co2 <= ad.co2 ? " win" : ""), '"><h4>', head("🅰 Rute A", ae), (ae.co2 < ad.co2 ? ' <span class="wintag">Lavest CO2</span>' : ""), "</h4>", rows(ae), "</div>",
+      '<div class="route"><h4>', head("🅱 Rute B", bd), "</h4>", rows(bd), "</div>",
+      '<div class="route', (be.co2 <= bd.co2 ? " win" : ""), '"><h4>', head("🅱 Rute B", be), (be.co2 < bd.co2 ? ' <span class="wintag">Lavest CO2</span>' : ""), "</h4>", rows(be), "</div></div>"];
+
+    // 📊 DIREKTE SAMMENLIGNING – begge ruter, begge drivkræfter, side om side
+    var variants = [ [ad, "🅰 A · 🛢️ diesel"], [ae, "🅰 A · ⚡ el"], [bd, "🅱 B · 🛢️ diesel"], [be, "🅱 B · ⚡ el"] ];
+    html.push('<h3 style="font-size:1em; margin:16px 0 4px">📊 Direkte måling – rute og drivkraft, alt på én tabel</h3>');
+    html.push('<div class="tablewrap"><table class="rt"><tr><th>Hvem vinder?</th><th>🅰 Rute A på diesel (🛢️ ', ad.tk.name, ')</th><th>🅰 Rute A på el (⚡ ', ae.tk.name, ')</th><th>🅱 Rute B på diesel (🛢️ ', bd.tk.name, ')</th><th>🅱 Rute B på el (⚡ ', be.tk.name, ')</th></tr>');
+    var cmpRow = function (label, fn, unit, lowerIsBetter) {
+      var vals = new Array(variants.length), nums = new Array(variants.length);
+      for (var i = 0; i < variants.length; i++) {
+        var v = fn(variants[i][0]);
+        vals[i] = v;
+        var n = parseFloat(v);
+        nums[i] = isNaN(n) ? null : n;
+      }
+      var best = null;
+      for (var j = 0; j < nums.length; j++) if (nums[j] !== null && (best === null || (lowerIsBetter ? nums[j] < best : nums[j] > best))) best = nums[j];
+      var okCount = 0, tie = false;
+      for (var k = 0; k < nums.length; k++) if (nums[k] !== null) okCount++;
+      tie = best !== null && okCount > 1;
+      for (var k2 = 0; tie && k2 < nums.length; k2++) if (nums[k2] !== null && nums[k2] !== best) tie = false;
+      var tds = new Array(variants.length);
+      for (var m = 0; m < vals.length; m++) {
+        tds[m] = "<td style='" + (!tie && nums[m] === best ? "background:#EDFAF2;font-weight:600;" : "") + "'>" + (!tie && nums[m] === best ? "✓ " : "") + vals[m] + (unit || "") + "</td>";
+      }
+      return "<tr><td><b>" + label + "</b></td>" + tds.join("") + "</tr>";
+    };
+    html.push(cmpRow("CO2-udledning", function (r) { return Math.round(r.co2); }, " kg", true));
+    html.push(cmpRow("Energiforbrug", function (r) { return r.tk.fuel === "diesel" ? Math.round(r.energy) + " l" : Math.round(r.energy) + " kWh"; }, "", true));
+    html.push(cmpRow("Strøm brugt på ruten", function (r) { return r.tk.fuel === "el" ? Math.round(r.energy) + " kWh" : "–"; }, "", true));
+    html.push(cmpRow("Lades i 45-min pausen (ladekurve)", function (r) { return r.tk.fuel === "el" ? r.kwh45 + " kWh" : "–"; }, "", false));
+    html.push(cmpRow("Tankning ved pumpen (ca. 60 l/min)", function (r) { return r.tk.fuel === "diesel" ? r.refuelMin + " min" : "–"; }, "", true));
+    html.push(cmpRow("Energipris", function (r) { return Math.round(r.price); }, " kr.", true));
+    html.push(cmpRow("Vejafgift (km-satsen)", function (r) { return Math.round(r.toll); }, " kr.", true));
+    html.push(cmpRow("Vægtafgift (andel, 100.000 km/år)", function (r) { return Math.round(r.tax); }, " kr.", true));
+    html.push(cmpRow("TOTAL PR. TUR", function (r) { return Math.round(r.total); }, " kr.", true));
+    html.push(cmpRow("Køretid", function (r) { return fmtTime(r.min); }, "", true));
+    html.push(cmpRow(USE_BREAK ? "Ladestop (ekstra tid efter 45-min pausen)" : "Ladestop (uden ladning i pausen)", function (r) { return r.tk.fuel === "el" ? (r.stops === 0 ? "ingen" : r.stops + " × " + r.extraPerStop + " min ekstra") : "ingen"; }, "", true));
+    html.push("</table></div>");
+
+    // Målbare forskelle: el mod diesel på EACH rute – fælles vaerdi-udtrak, een gang pr. rute-saet
+    [[ad, ae, "A"], [bd, be, "B"]].forEach(function (p) {
+      var rd = p[0], re_ = p[1], name = p[2];
+      var save = Math.round(rd.co2 - re_.co2);
+      var pct = Math.round(save / rd.co2 * 100);
+      var pdiff = Math.round(re_.price - rd.price);
+      var tdiff = Math.round(re_.min - rd.min);
+      if (save > 0) {
+        html.push('<div class="ev ok"><span>🌿 <b>Rute ' + name + ", målt direkte:</b> hvis du kører " + re_.tk.name + " (⚡ el) i stedet for " + rd.tk.name + " (🛢️ diesel), udleder du <b>" + save + " kg mindre CO2</b> – ca. " + pct + " % mindre. Til gengæld: energiprisen " + (pdiff === 0 ? "er den samme" : (pdiff < 0 ? "falder med " + Math.abs(pdiff) + " kr." : "stiger med " + pdiff + " kr.")) + ", og kørsel+ladning tager " + (tdiff === 0 ? "samme tid" : (tdiff > 0 ? tdiff + " min. længere tid" : Math.abs(tdiff) + " min. kortere")) + ". På den totale pris (energi + vejafgift + vægtafgift) er forskellen <b>" + Math.round(re_.total - rd.total) + " kr.</b>. Hvem ville du anbefale – vognmanden, kunden eller samfundet?</span></div>");
+      } else if (save < 0) {
+        html.push('<div class="ev warn"><span>🔁 <b>Rute ' + name + ':</b> her er det faktisk diesel-versionen der udleder mindst CO2 (' + Math.round(rd.co2) + " kg mod " + Math.round(re_.co2) + " kg). Kan det passe? Tjek lasten og ruten – og forklar, hvad der skal til, før el-lastbilen vinder.</span></div>");
+      } else {
+        html.push('<div class="ev ok"><span>🤝 <b>Rute ' + name + ':</b> lige meget CO2 på diesel og el her. Kig så på tid, pris, ladestop og arbejdsmiljø.</span></div>');
+      }
+    });
+
+    // samfundsperspektiv
+    html.push('<div class="ev ok"><span>🌍 <b>Samfundsperspektivet:</b> vejafgiften er lagt lavere for el (0,13 kr./km) end for diesel (ca. 0,91 kr./km), fordi afgiften er CO2-differentieret – den priser vejslid, støj, ulykker og luftforurening. Og CO2-regnskabet ovenfor er klimaregnskabet: diesel ca. 2,68 kg CO2 pr. liter direkte fra udstødningsrøret, el ca. 0,2 kg CO2 pr. kWh via elnettet. Når vognmanden sparer penge på el, sparer samfundet altså også på miljø- og samfundsomkostninger. Skriv i refleksionsfeltet: hvem har størst gavn af skiftet – og hvad koster det omvendt (fx ladetid og rækkevidde)?</span></div>');
+
+    // advarsler
+    [[ad, "A"], [ae, "A"], [bd, "B"], [be, "B"]].forEach(function (p) {
+      var r = p[0], name = p[1];
+      if (r.tk.fuel === "el" && r.stops > 0) {
+        html.push('<div class="ev warn"><span>🔌 <b>Rute ' + name + " (" + r.tk.name + "):</b> batteriet (brugbar energi nu: ca. " + r.netUse + " kWh) rækker ikke hele vejen – modellen regner med " + r.stops + " ladestop à " + r.tk.chargeMin + " min (ca. " + r.chargePerStop + " kWh pr. stop efter ladekurven)" + (USE_BREAK ? ", men pausen skal holdes alligevel, så den dækker typisk det meste af ladetiden" : "") + ". Husk også: findes der hurtigladere til lastbiler på ruten, hvor du kan holde pausen alligevel?" + (TEMP <= 0 ? " Og ved ca. " + TEMP + " °C er forbruget ca. +" + Math.round((r.tempF - 1) * 100) + " % – rækkevidden er kortere om vinteren ❄️" : "") + "</span></div>");
+      }
+      if (r.min > 9 * 60) {
+        html.push('<div class="ev warn"><span>⚠️ <b>Rute ' + name + " (" + r.tk.name + "):</b> over 9 timers kørsel på én dag – tjek pauser og daglig hviletid (reglerne står i panelet Kilder), eller del turen over flere dage.</span></div>");
+      }
+    });
+    $("res").innerHTML = html.join("");
+
+    // 💰 UDGIFTER-panelet: regnskabet for sig – samme ture, samme lastbiler
+    var uh = [];
+    [[ad, ae, "🅰 Rute A"], [bd, be, "🅱 Rute B"]].forEach(function (grp) {
+      var rd = grp[0], re_ = grp[1];
+      uh.push("<h3 style='font-size:1em; margin:14px 0 4px'>", grp[2], " · ", Math.round(rd.km), " km · udgifter pr. tur</h3>");
+      uh.push('<div class="tablewrap"><table class="rt"><tr><th>Udgift</th><th>🛢️ ', rd.tk.name, '</th><th>⚡ ', re_.tk.name, "</th></tr>");
+      var row = function (label, vd, ve) {
+        var nd = Math.round(vd), ne = Math.round(ve);
+        var best = Math.min(nd, ne);
+        return "<tr><td>" + label + "</td><td style='" + (nd === best ? "background:#EDFAF2;font-weight:600;" : "") + "'>" + nd.toLocaleString("da-DK") + " kr.</td><td style='" + (ne === best ? "background:#EDFAF2;font-weight:600;" : "") + "'>" + ne.toLocaleString("da-DK") + " kr.</td></tr>";
+      };
+      uh.push(row("Energi (" + Math.round(rd.energy) + " l diesel" + " / " + Math.round(re_.energy) + " kWh)", rd.price, re_.price));
+      uh.push(row("Vejafgift (" + rd.tk.toll.toFixed(2).replace(".", ",") + " / " + re_.tk.toll.toFixed(2).replace(".", ",") + " kr./km)", rd.toll, re_.toll));
+      uh.push(row("Vægtafgift (fast, omregnet pr. km)", rd.tax, re_.tax));
+      uh.push(row("Anskaffelse: " + (rd.tk.buy / 1000).toLocaleString("da-DK") + " kr. køb ÷ levetid " + rd.tk.life.toLocaleString("da-DK") + " km (-" + Math.round(rd.tk.rest * 100) + "% restværdi)", rd.buy, re_.buy));
+      uh.push(row("<b>DRIFT PR. TUR</b> (energi + afgifter)", rd.total, re_.total));
+      uh.push(row("<b>VUGGE TIL GRAV PR. TUR</b> (inkl. anskaffelse)", rd.totalLife, re_.totalLife));
+      uh.push("<tr><td>Pr. km i snit (vugge til grav)</td><td>" + (rd.totalLife / rd.km).toFixed(2).replace(".", ",") + " kr./km</td><td>" + (re_.totalLife / re_.km).toFixed(2).replace(".", ",") + " kr./km</td></tr>");
+      uh.push("</table></div>");
+      var lifeDiff = Math.round(rd.totalLife - re_.totalLife);
+      if (lifeDiff > 0) {
+        uh.push('<div class="ev ok"><span>🛒 <b>Vugge til grav:</b> el-lastbilen er dyrere at købe, men alligevel <b>' + daDK(lifeDiff) + ' kr. billigere pr. tur</b> når anskaffelsen er fordelt over levetiden. Spørgsmålet til vognmanden er: har han råd til at vente på besparelsen?</span></div>');
+      } else if (lifeDiff < 0) {
+        uh.push('<div class="ev warn"><span>🛒 <b>Vugge til grav:</b> el-lastbilens højere købspris vender regnskabet her – den koster <b>' + daDK(Math.abs(lifeDiff)) + ' kr. mere pr. tur</b> fordelt over levetiden. Hvad skal der til? Flere km pr. år, lavere elpris, højere dieselpris eller tilskud?</span></div>');
+      } else {
+        uh.push('<div class="ev ok"><span>🛒 <b>Vugge til grav:</b> regnskabet står lige. Men kig på CO2-fanen: hvis penge og klima er fladt, hvad vælger du så som fagperson – og hvorfor?</span></div>');
+      }
+      // tilbagebetaling: hvor mange km tager det at tjene den ekstra købspris hjem?
+      var extraBuy = re_.tk.buy * (1 - re_.tk.rest) - rd.tk.buy * (1 - rd.tk.rest);
+      var driftSaveKm = (rd.price + rd.toll + rd.tax) / rd.km - (re_.price + re_.toll + re_.tax) / re_.km;
+      if (extraBuy > 0 && driftSaveKm > 0) {
+        var payKm = extraBuy / driftSaveKm;
+        uh.push('<div class="ev ok"><span>📈 <b>Tilbagebetalingsregnestykke:</b> el-lastbilen koster ca. ' + daDK(extraBuy) + " kr. mere at anskaffe, men sparer ca. " + driftSaveKm.toFixed(2).replace(".", ",") + " kr./km i drift. Den ekstrapris er tjent hjem efter ca. <b>" + daDK(payKm) + " km</b> – ved ca. 100.000 km/år altså ca. " + (payKm / 100000).toFixed(1).replace(".", ",") + " års kør. Det er dét, direktøren vil vide, før han skriver under.</span></div>");
+      }
+      // 🎛️ HVAD SKAL DER TIL: brake-even paa el-pris og koebspris
+      var fe = SCEN.pe === null ? P_E : SCEN.pe;
+      var peTxt;
+      if (CHARGE_MODE === "rute") {
+        peTxt = "– her lades der KUN på ruten à 2,50 kr./kWh; skift til Smart eller Depot under Byg din rute, før el-prisen kan vendes";
+      } else {
+        var fk = CHARGE_MODE === "auto" ? re_.fastKwh : 0;
+        var denom = Math.max(re_.energy - fk, 1);
+        var peBes = (rd.total - re_.toll - re_.tax - fk * P_FAST) / denom;
+        peTxt = (fe <= peBes ? "el vinder allerede på denne rutes drift 🎉 – break-even ligger på ca. " + peBes.toFixed(2).replace(".", ",") + " kr./kWh, og scenariet viser " + fe.toFixed(2).replace(".", ",") + " kr./kWh" :
+          "ca. <b>" + peBes.toFixed(2).replace(".", ",") + " kr./kWh</b> (scenariet viser " + fe.toFixed(2).replace(".", ",") + " kr./kWh)");
+      }
+      var buyBes = (rd.totalLife - (re_.price + re_.toll + re_.tax)) * re_.tk.life / (re_.km * (1 - re_.tk.rest));
+      uh.push('<div class="sbox" style="margin:10px 0"><strong>🎛️ Hvad skal der til, før el vinder på ', grp[2] + '?</strong>',
+        '<ul style="margin:6px 0 0; padding-left:18px">',
+        '<li>Enten skal <b>depot-strømprisen</b> ned på ', peTxt, '</li>',
+        '<li>Eller skal <b>el-lastbilen koste maks. ca. <b>' + daDK(buyBes) + ' kr.</b> – i scenariet koster den ca. ' + daDK(re_.tk.buy * SCEN.buyMul) + ' kr.</li>',
+        '<li>Eller skal den <b>køre flere km om året</b> – tilbagebetalingsregnestykket ovenfor viser, hvornår drifts-besparelsen har betalt ekstra-købsprisen hjem.</li>',
+        '<li>Eller en blanding: prøv scenarie-vælgeren ovenfor og se, hvad solceller på lageret, smart nat-ladning eller fremtidens billigere batterier gør ved regnskabet!</li>',
+        '</ul></div>');
+      var totalDiff = Math.round(rd.total - re_.total);
+      if (totalDiff > 0) {
+        uh.push('<div class="ev ok"><span>📊 På ', grp[2], " koster el-lastbilen <b>" + daDK(totalDiff) + " kr. mindre pr. tur</b> – også efter man har medregnet vejafgift og vægtafgift. Størsteparten af besparelsen kommer fra energi og den lave vejafgift (0,13 kr./km).</span></div>");
+      } else if (totalDiff < 0) {
+        uh.push('<div class="ev warn"><span>📊 På ', grp[2], " koster el-lastbilen faktisk <b>" + daDK(Math.abs(totalDiff)) + " kr. mere pr. tur</b>. Kan det passe? Se på ladestop, energipris og rute – hvad skal der til, før el vinder regnskabet?</span></div>");
+      } else {
+        uh.push('<div class="ev ok"><span>📊 På ', grp[2], " koster diesel og el det samme pr. tur. Kig så på CO2-fanen under Byg din rute – og på hvad der ellers skilter dem ad (fx ladetid).</span></div>");
+      }
+    });
+    // billigste kombination af rute og drivkraft (vinderen paa det samlede driftsregnskab)
+    var bestRoute = (Math.min(ad.total, ae.total) <= Math.min(bd.total, be.total)) ? "A" : "B";
+    var bestVar = ((bestRoute === "A" ? ae.total : be.total) < (bestRoute === "A" ? ad.total : bd.total)) ? "el" : "diesel";
+    var bestTruck = bestRoute === "A" ? (bestVar === "el" ? ae : ad) : (bestVar === "el" ? be : bd);
+    uh.push('<div class="ev ok"><span>🏆 <b>Billigste samlede tur:</b> rute ' + bestRoute + " med " + bestTruck.tk.emoji + " " + bestTruck.tk.name + " til " + daDK(bestTruck.total) + " kr. Sammenlign med CO2-vinderen under Byg din rute: er det den samme lastbil, der vinder på penge og klima? Det er netop dét, en faglig anbefaling skal afklare.</span></div>");
+    $("udgiftRes").innerHTML = uh.join("");
+
+    // 🗳️ DIT VALG-panelet: rangering efter elevens prioritet, med de faktiske tal
+    var crit = CRIT[CRIT_SEL];
+    var vk = [["🅰 Rute A på 🛢️ diesel", ad], ["🅰 Rute A på ⚡ el", ae], ["🅱 Rute B på 🛢️ diesel", bd], ["🅱 Rute B på ⚡ el", be]];
+    vk.sort(function (x, y) { return crit.lower ? crit.value(x[1]) - crit.value(y[1]) : crit.value(y[1]) - crit.value(x[1]); });
+    var vh = ["<p style='margin:6px 0'><b>Dit kriterium: ", crit.label, "</b> – ", crit.txt, "</p>"];
+    vh.push('<div class="tablewrap"><table class="rt"><tr><th>Plads</th><th>Mulighed</th><th>', crit.th, " (fra din rute)</th></tr>");
+    for (var vi = 0; vi < vk.length; vi++) {
+      var r2 = vk[vi][1];
+      vh.push("<tr", (vi === 0 ? " style='background:#EDFAF2;font-weight:600'" : ""), "><td>", (vi === 0 ? "🏆 1." : (vi + 1) + "."), "</td><td>", vk[vi][0], "<br><span class=\"hint\">", r2.tk.emoji, " ", r2.tk.name, "</span></td><td>", crit.show(r2), "</td></tr>");
+    }
+    vh.push("</table></div>");
+    var w = vk[0][1];
+    vh.push('<div class="ev ok"><span>🏆 <b>Din vinder er ' + vk[0][0] + '</b> med <b>' + w.tk.emoji + " " + w.tk.name + '</b> – prisen bliver ca. <b>' + daDK(w.totalLife) + ' kr. pr. tur</b> (vugge til grav) og ca. <b>' + Math.round(w.co2) + ' kg CO2</b> udledning. Skriv din begrundelse i refleksionsfeltet under Byg din rute – og sammenlign med din makker: blev det samme valg?</span></div>');
+    $("valgRes").innerHTML = vh.join("");
+  }
+
+  $("refl").addEventListener("input", function () {
+    $("reflMsg").textContent = $("refl").value.length > 20 ? "✅ Noteret – tag begrundelsen med til klassens samtale." : "";
+    persist(); // v1: refleksionen gemmes løbende
+  });
+
+  // v1: kopier begrundelse og tal – afleveringsvej uden for itslearning
+  function fallbackCopy(txt) {
+    var ta = document.createElement("textarea");
+    ta.value = txt;
+    ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (err) { }
+    document.body.removeChild(ta);
+  }
+  $("kopi").addEventListener("click", function () {
+    if (!LAST) return;
+    var L = ["Byg din rute – diesel eller el", "Dato: " + new Date().toLocaleDateString("da-DK"), "Ladning: " + CHARGE_MODE + " · Temperatur: ca. " + TEMP + " °C"];
+    [["Rute A – diesel", LAST.ad], ["Rute A – el", LAST.ae], ["Rute B – diesel", LAST.bd], ["Rute B – el", LAST.be]].forEach(function (p) {
+      var r = p[1];
+      L.push("");
+      L.push(p[0] + ": " + r.tk.name + " · " + Math.round(r.km) + " km · køretid " + fmtTime(r.min) + (r.stops ? " · " + r.stops + " ladestop" : " · ingen ladestop"));
+      L.push("Energi: " + (r.tk.fuel === "diesel" ? Math.round(r.energy) + " l diesel" : Math.round(r.energy) + " kWh") + " · CO2: " + Math.round(r.co2) + " kg · energipris: " + Math.round(r.price) + " kr.");
+      L.push("Drift pr. tur: " + Math.round(r.total) + " kr. · vugge til grav: " + Math.round(r.totalLife) + " kr.");
+    });
+    L.push("");
+    L.push("Min begrundelse:");
+    L.push($("refl").value || "(ikke udfyldt)");
+    var txt = L.join("\n");
+    var ok = function () {
+      var m = $("kopiMsg");
+      m.textContent = "✅ Kopieret – klistr det ind i din aflevering eller dine noter.";
+      setTimeout(function () { m.textContent = ""; }, 4000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(ok, function () { fallbackCopy(txt); ok(); });
+    } else { fallbackCopy(txt); ok(); }
+  });
+
+  $("addA").addEventListener("click", function () { if (A.steps.length < 6) { A.steps.push({ km: 100, v: 70, t: 20 }); build("tblA", A); evaluate(); } });
+  $("addB").addEventListener("click", function () { if (B.steps.length < 6) { B.steps.push({ km: 100, v: 70, t: 20 }); build("tblB", B); evaluate(); } });
+
+  // v1: nulstil ruterne til udgangspunktet (refleksionen bevares)
+  $("resetR").addEventListener("click", function () {
+    A.d = "fh460"; A.e = "s45r"; A.steps = [{ km: 180, v: 70, t: 17 }, { km: 180, v: 70, t: 17 }];
+    B.d = "r500"; B.e = "eactros"; B.steps = [{ km: 320, v: 75, t: 32 }];
+    buildPicker("pickA", A, "A");
+    buildPicker("pickB", B, "B");
+    build("tblA", A);
+    build("tblB", B);
+    evaluate();
+  });
+
+  // 🗳️ Kriterier fra haefter: MiljO / OEkonomi / Kvalitet / ArbejdsmiljO
+  var CRIT_SEL = 0;
+  var CRIT = [
+    { id: 0, label: "🌿 Miljø", txt: "CO2, energi, støj og partikler", lower: true, th: "Miljøtallene",
+      value: function (r) { return r.co2; },
+      show: function (r) { return Math.round(r.co2) + " kg CO2 · " + (r.tk.fuel === "diesel" ? Math.round(r.energy) + " l diesel (2,68 kg CO2/l direkte fra røret – plus NOx og partikler i byen)" : Math.round(r.energy) + " kWh strøm (0,2 kg CO2/kWh fra elmixen – grønnere strøm giver lavere, og ingen NOx eller partikler på ruten)") + " · afgiftssats " + r.tk.toll.toFixed(2).replace(".", ",") + " kr./km"; } },
+    { id: 1, label: "💰 Økonomi", txt: "pris pr. tur, tid, energi, ladning", lower: true, th: "Økonomitallene",
+      value: function (r) { return r.totalLife; },
+      show: function (r) { return daDK(r.totalLife) + " kr. pr. tur i TCO-regnestykket vugge-til-grav – den beregningsmetode DTL/COWI anbefaler vognmænden · " + (r.totalLife / r.km).toFixed(2).replace(".", ",") + " kr./km · drift " + daDK(r.total) + " kr."; } },
+    { id: 2, label: "⭐ Kvalitet", txt: "levering til tiden, gods uden skader", lower: true, th: "Kvalitetstallene",
+      value: function (r) { return r.min + r.stops * 15; },
+      show: function (r) { return fmtTime(r.min) + " total kørsel (inkl. ladning) · " + (r.stops === 0 ? "ingen ladestop – punktlighed er nem at love" : r.stops + " ladestop à " + r.tk.chargeMin + " min at indplanlægge (læg dem i de lovpligtige pauser, så leveringen stadig er til tiden)"); } },
+    { id: 3, label: "🤝 Arbejdsmiljø", txt: "arbejdspres, pauser, ventetid, støj", lower: true, th: "Arbejdsmiljøtallene",
+      value: function (r) { return r.min + r.stops * r.extraPerStop; },
+      show: function (r) { return fmtTime(r.min) + " total arbejdstid · " + (r.stops === 0 ? "ingen ekstra stop" : r.stops + " stop à " + r.extraPerStop + " min ekstra") + " · " + (r.tk.fuel === "el" ? "mærkbart mere stille og blødere kørsel (målt: ca. halvt så høj som diesel i byen) – typisk mindre træthed, men ladningen kræver planlægning" : "markant motorstøj og vibration hele dagen – til gengæld er tankningen hurtig, og der skal ikke planlægges ladning"); } }
+  ];
+
+  // quiz – bygges een gang i et fragment, ikke om igen ved hver evaluering
+  var QUIZ = [
+    { q: "Hvor meget CO2 hænger der ved 1 liter diesel – og ved 1 kWh el?",
+      opts: ["Diesel: ca. 2,68 kg. El: ca. 0,1–0,2 kg (via elmixen)", "Diesel: 0,2 kg. El: 2,68 kg", "Begge: intet CO2 på ruten"], a: 0,
+      why: "Diesel: ca. 2,68 kg CO2 pr. liter, målt ved forbrændingen. El-lastbilen udleder ingenting fra udstødningsrøret, men strømmens produktion ligger på ca. 0,1–0,2 kg CO2 pr. kWh. Husk begge tal, når du laver regnestykket." },
+    { q: "Hvorfor kan en el-lastbil få brug for ladestop på en dag med tung last?",
+      opts: ["Fordi lasten gør forbruget pr. km større, så batteriet rækker kortere", "Fordi el-lastbiler ikke må køre over 60 km/t", "Fordi batteriet bliver mindre af lasten"], a: 0,
+      why: "Forbruget stiger med vægten – fx fra ca. 1,1 kWh/km tom til 1,8 kWh/km ved fuld last i vores model. Mere energi pr. km = kortere rækkevidde pr. ladning – derfor er planlægning af ladestandere en del af chaufførens faglighed." },
+    { q: "Hvilken af de rigtige el-lastbiler har det største batteri og længst oplyste rækkevidde?",
+      opts: ["Volvo FM Electric (540 kWh, op til 380 km)", "Mercedes-Benz eActros 600 (621 kWh, op til 500 km)", "Scania 45R (624 kWh, ca. 350 km)"], a: 1,
+      why: "eActros 600 har 621 kWh installeret og op til 500 km rækkevidde – bygget til langtur. Men pas på: størst installeret batteri er ikke det samme som længst rækkevidde! Scania 45R har 624 kWh installeret, men kortere oplyst rækkevidde (ca. 350 km ved ca. 40 t). Spørgsmålet er: hvilke forhold testede producenten ved?" },
+    { q: "200 km med 32 t last og de samme 200 km med 0 t last – hvad gælder for forbruget?",
+      opts: ["Lasten betyder ingenting", "Tung last bruger mere energi pr. km – på diesel OG el", "Tom lastbil bruger mest"], a: 1,
+      why: "Vægten presser forbruget op hos begge drivkræfter – i modellen fx 19-29 l/100 km på diesel og 1,0-1,8 kWh/km på el, afhængig af last. Derfor betaler det sig at samle lasten, uanset drivkraft." },
+    { q: "En el-lastbil har 624 kWh INSTALLERET, men fabrikken opgiver kun ca. 530 kWh BRUGBAR. Hvorfor må chaufføren kun regne med de brugbare kWh?",
+      opts: ["For fabrikken selv bygger en reserve ind i batteriet, så det holder længere og lader bedre", "Fordi chaufføren selv skal regne 15 % af batteriet fra hver morgen", "Fordi 94 kWh altid er defekte fra fabrikken"], a: 0,
+      why: "Producenterne bygger selv en sikkerheds-reserve ind – ICCT målte i reel drift, at flåderne kun kunne bruge ca. 70 % af batteriet. Det er fabrikantens ansvar og står i databladet, så chaufføren bare skal kende de BRUGBARE kWh. Derfor viser modellen installeret og brugbar som to forskellige tal." },
+    { q: "Hvorfor rækker batteriet kortere om vinteren?",
+      opts: ["Kun fordi sneen vejer tungt på ladet", "Fordi el-lastbilen skal lave kabinevarmen MED strøm fra batteriet – og batteriet selv leverer mindre energi, når det er koldt", "Fordi batteriet fryser fast og ikke kan tænde"], a: 1,
+      why: "Diesel-motoren laver selv spildvarme til kabinen – el-lastbilen skal lave varmen med strøm fra batteriet. Og batteriet er selv koldt-følsomt: lithium-celler leverer mindre brugbar energi og tager langsommere imod ladning i kulde. Derfor stiger forbruget mere for el end for diesel om vinteren. Prøv temperatur-vælgeren under Byg din rute!" },
+    { q: "Chaufføren holder sin 45-min pause ved en hurtiglader (ca. 250 kW i snit). Ca. hvor meget strøm kommer der på batteriet i pausen?",
+      opts: ["Ca. 250 kWh – nok til ca. 150-200 km ekstra kørsel", "Ca. 45 kWh – én kWh pr. minut", "Ingenting – lastbiler må ikke lade under pause"], a: 0,
+      why: "Effekt × tid: 250 kW × 0,75 time = ca. 188 kWh i 45 min. Så pausen, som chaufføren alligevel skal holde, kan blive bilens ladetid – derfor koster ladestop ofte ingen ekstra tid. Sammenlign med tankningen: ca. 60 l/min. fra tankpistolen gør diesel'en klar på få minutter." },
+    { q: "Hvad betyder progressionen OM → FOR → SOM i bæredygtigheds-hæftet?",
+      opts: ["Om sommeren, foråret og samlet", "Fra at VIDE om bæredygtighed til at handle FOR og tænke SOM fagperson", "Tre forskellige lastbilmærker"], a: 1,
+      why: "OM = viden om bæredygtighed. FOR = at arbejde hen imod det. SOM = at tænke og handle som en fagperson, hvor bæredygtighed er en del af fagligheden – fx når du vælger rute, lastbil og last med omhu." }
+  ];
+  var qEl = $("quiz");
+  (function () {
+    var frag = document.createDocumentFragment ? document.createDocumentFragment() : qEl; // fallback til teststubbe
+    QUIZ.forEach(function (item, qi) {
+      var box = document.createElement("div");
+      box.className = "quizbox";
+      var h = document.createElement("p");
+      h.innerHTML = "<b>" + (qi + 1) + ".</b> " + item.q;
+      box.appendChild(h);
+      item.opts.forEach(function (o, oi) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = o;
+        b.addEventListener("click", function () {
+          Array.prototype.forEach.call(box.querySelectorAll("button"), function (x) { x.disabled = true; });
+          b.style.background = oi === item.a ? "#EDFAF2" : "#FDEDEC";
+          var fb = document.createElement("p");
+          fb.style.margin = "8px 0 0";
+          fb.innerHTML = (oi === item.a ? "<b>✅ Rigtigt!</b> " : "<b>❌ Ikke rigtigt.</b> ") + item.why;
+          box.appendChild(fb);
+          var again = document.createElement("button");
+          again.type = "button";
+          again.textContent = "↻ Prøv igen";
+          again.addEventListener("click", function () {
+            box.removeChild(fb);
+            box.removeChild(again);
+            Array.prototype.forEach.call(box.querySelectorAll("button"), function (x) { x.disabled = false; x.style.background = ""; });
+          });
+          box.appendChild(again);
+        });
+        box.appendChild(b);
+      });
+      frag.appendChild(box);
+    });
+    if (frag !== qEl) qEl.appendChild(frag);
+  })();
+
+  // panelnavigation – panes/harefs slaas kun op een gang, ikke ved hvert klik
+  var links = Array.prototype.slice.call(document.querySelectorAll(".sidebar a"));
+  var panes = Array.prototype.slice.call(document.querySelectorAll("[data-panel]"));
+  links.forEach(function (x) { x._pane = x.getAttribute("href").slice(1); });
+  function showPanel(p) {
+    for (var i = 0; i < panes.length; i++) panes[i].classList.toggle("panel-open", panes[i].getAttribute("data-panel") === p);
+    links.forEach(function (x) { x.classList.toggle("on", x._pane === p); });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  window.showPanel = showPanel;
+  // dybe links som hjemmeside: hash i URL opdateres ved skift, og aabnes ved genindlæsning
+  var origShow = showPanel;
+  showPanel = function (p) { origShow(p); if (window.history && history.replaceState && "#" + p !== location.hash) history.replaceState(null, "", "#" + p); };
+  window.showPanel = showPanel;
+  links.forEach(function (a) {
+    a.addEventListener("click", function (e) { e.preventDefault(); showPanel(a._pane); });
+  });
+  // v1: fagord-links åbner start-panelet og scroller til ordlisten
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest("a.ordlink") : null;
+    if (!a) return;
+    e.preventDefault();
+    showPanel("start");
+    setTimeout(function () {
+      var t2 = document.getElementById(a.getAttribute("data-ord"));
+      if (t2) t2.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
+  });
+  $("ladning").addEventListener("change", function () {
+    CHARGE_MODE = this.value;
+    evaluate();
+  });
+  $("scen").addEventListener("change", function () {
+    var v = this.value;
+    SCEN.key = v;
+    SCEN.pe = SCEN_PE[v];
+    SCEN.buyMul = v === "frem" ? 0.65 : 1.00;
+    var noteEl = document.getElementById("scenNote");
+    if (noteEl) noteEl.textContent = SCEN_TXT[v];
+    evaluate();
+  });
+  $("temp").addEventListener("change", function () {
+    TEMP = +this.value;
+    evaluate();
+  });
+  $("pauseLad").addEventListener("change", function () {
+    USE_BREAK = this.checked;
+    evaluate();
+  });
+  (function () { var n = document.getElementById("scenNote"); if (n) n.textContent = SCEN_TXT.nu; })();
+  var critWrap = document.getElementById("crit");
+  if (critWrap) {
+    var critBtns = CRIT.map(function (c) {
+      var b = document.createElement("button");
+      b.textContent = c.label;
+      b.title = c.txt;
+      if (c.id === CRIT_SEL) b.classList.add("on");
+      b.addEventListener("click", function () {
+        CRIT_SEL = c.id;
+        critBtns.forEach(function (x) { x.classList.remove("on"); });
+        b.classList.add("on");
+        evaluate();
+      });
+      critWrap.appendChild(b);
+      return b;
+    });
+  }
+  // Maanedligt data-tjek: datostempel + automatisk paamindelse naar tallene er over 30 dage gamle
+  var DATA_UPDATED = "2026-11-22"; // sidst læreren tjekkede tallene – ret datoen ved hvert tjek
+  (function () {
+    var el = document.getElementById("dataAge");
+    if (!el) return;
+    var d = new Date(DATA_UPDATED + "T00:00:00"), days = Math.floor((Date.now() - d.getTime()) / 86400000);
+    var dato = d.toLocaleDateString("da-DK", { day: "numeric", month: "long", year: "numeric" });
+    if (days <= 30) el.innerHTML = "✅ Tallene er tjekket den " + dato + " – for " + days + " dage siden. Friske nok!";
+    else el.innerHTML = "⚠️ <b>Der er gået " + days + " dage</b>, siden tallene sidst blev tjekket (den " + dato + "). Tjek listen nedenfor og ret tallene – fx dieselprisen og vejafgiftssatserne.";
+  })();
+
+  restore(); // v1: hent elevens gemte arbejde, før tabellerne bygges
+  buildPicker("pickA", A, "A");
+  buildPicker("pickB", B, "B");
+  build("tblA", A);
+  build("tblB", B);
+  evaluate();
+  // aabent hash-panelet hvis det findes – ellers forsiden (undgaar blank side ved forkert link)
+  var startP = (typeof location !== "undefined" && location.hash) ? location.hash.slice(1) : "";
+  if (!startP || !document.querySelector('[data-panel="' + startP + '"]')) startP = "start";
+  showPanel(startP);
+})();
+</script>
+</body>
 </html>
