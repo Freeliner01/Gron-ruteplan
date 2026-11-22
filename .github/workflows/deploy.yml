@@ -18,6 +18,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Opret Pages-sitet, hvis det ikke findes endnu
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          KODE=$(curl -s -o /tmp/pages.json -w "%{http_code}" -X POST             -H "Authorization: Bearer ${GITHUB_TOKEN}"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"             -d '{"build_type":"workflow"}')
+          echo "Pages-oprettelse: HTTP ${KODE}"; cat /tmp/pages.json || true
+          if [ "${KODE}" != "201" ] && [ "${KODE}" != "409" ]; then
+            echo "Bemærk: hverken oprettet (201) eller findes allerede (409) – prøver alligevel at fortsætte."
+          fi
       - id: pages
         uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
