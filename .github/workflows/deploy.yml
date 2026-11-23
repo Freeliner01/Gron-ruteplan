@@ -9,7 +9,7 @@ permissions:
   id-token: write
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -18,17 +18,22 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v5
-      - name: Opret Pages-sitet, hvis det ikke findes endnu
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          KODE=$(curl -s -o /tmp/pages.json -w "%{http_code}" -X POST             -H "Authorization: Bearer ${GITHUB_TOKEN}"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"             -d '{"build_type":"workflow"}')
-          echo "Pages-oprettelse: HTTP ${KODE}"
       - id: pages
         uses: actions/configure-pages@v5
       - name: Upload side som artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+      - name: vent paa artifact-registrering
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            FUNDET=$(curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}"               "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts"               | jq -r '[.artifacts[] | select(.name=="github-pages")] | length')
+            echo "Forsoeg ${i}: github-pages-artifacts fundet: ${FUNDET}"
+            [ "${FUNDET}" != "0" ] && [ "${FUNDET}" != "null" ] && exit 0
+            sleep 15
+          done
+          echo "Artifact blev aldrig registreret"; exit 1
       - id: deployment
         uses: actions/deploy-pages@v4
