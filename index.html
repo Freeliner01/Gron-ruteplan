@@ -15,16 +15,19 @@
   .sidebar .logo { font-size: 1.5em; color: #fff; text-align: center; margin-bottom: 14px; }
   .sidebar .logo small { display: block; font-size: .5em; font-weight: 600; letter-spacing: .06em; color: #B8CDE0; margin-top: 4px; }
   .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 6px; color: #DCE8F4; text-decoration: none; font-size: .95em; }
-  .sidebar a:hover { background: rgba(255,255,255,.09); }
+  .sidebar a, .act, .ghost, .crit button, .quizbox button, table.rt button.del, .truckpick select { transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease; }
+  .sidebar a:hover { background: rgba(255,255,255,.11); }
+  .sidebar a.on { box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
   .sidebar a.on { background: #16588E; color: #fff; font-weight: 600; }
   .sidebar .si { font-size: 1.2em; }
   .hero { background: rgba(255,255,255,.86); border-top: 4px solid #27AE60; border-radius: 8px; padding: 20px 26px; margin: 0 0 14px; }
   .hero { display: none; }
   .hero.panel-open { display: block; }
-  .hero h1 { margin: 8px 0; font-size: 1.75em; font-weight: 600; }
+  .hero h1 { margin: 8px 0; font-size: 1.75em; font-weight: 600; letter-spacing: -0.02em; }
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
   .hero p { margin: 0; color: #52606D; max-width: 660px; }
   a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #16588E; outline-offset: 2px; }
-  .card { background: rgba(255,255,255,.92); border: 1px solid #EEF0F4; border-radius: 8px; padding: 22px 26px; margin: 14px 0; box-shadow: 0 2px 6px rgba(15,61,99,.08); display: none; }
+  .card { background: rgba(255,255,255,.92); border: 1px solid #EEF0F4; border-radius: 10px; padding: 22px 26px; margin: 14px 0; box-shadow: 0 2px 10px rgba(15,61,99,.09); display: none; }
   .card.panel-open { display: block; animation: fadeUp .25s ease; }
   footer#kilder.panel-open { display: block; animation: fadeUp .25s ease; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -41,12 +44,16 @@
   table.rt { width: 100%; border-collapse: collapse; font-size: .94em; margin: 8px 0; }
   table.rt th { text-align: left; background: #EAF1F8; color: #0F3D63; padding: 8px 10px; }
   table.rt td, table.rt th { border-top: 1px solid #E4EAF2; padding: 8px 10px; }
+  table.rt { border-radius: 8px; overflow: hidden; }
+  table.rt tbody tr:nth-child(even) { background: #FAFCFE; }
+  table.rt tbody tr:hover { background: #F2F7FC; }
   table.rt input { font: inherit; width: 100%; min-width: 0; padding: 6px 6px; border: 1px solid #C9D6E6; border-radius: 6px; }
   .route { min-width: 0; overflow-wrap: break-word; }
   .route select { max-width: 100%; }
   .truckspec { overflow-wrap: break-word; }
   .routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px; }
-  .route { border: 2px solid #C9D6E6; border-radius: 10px; padding: 14px 16px; background: #fff; }
+  .route { border: 2px solid #C9D6E6; border-radius: 10px; padding: 14px 16px; background: #fff; transition: border-color .15s ease, box-shadow .15s ease; }
+  .route:hover { border-color: #A9C0DC; box-shadow: 0 2px 8px rgba(15,61,99,.08); }
   .route.win { border-color: #27AE60; box-shadow: 0 0 0 3px #EDFAF2; }
   .route h4 { margin: 0 0 8px; color: #0F3D63; }
   .truckpick { margin: 4px 0 10px; }
@@ -85,6 +92,9 @@
   }
   /* v1-tilføjelser: knapper, flow, fremdrift, mobil-tabeller, print */
   .act { font: inherit; padding: 10px 18px; background: #27AE60; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+  .act:hover { background: #219a58; box-shadow: 0 2px 6px rgba(39,174,96,.35); }
+  .act:active { transform: translateY(1px); }
+  .ghost:hover, .crit button:hover, .quizbox button:hover { border-color: #16588E; box-shadow: 0 1px 4px rgba(15,61,99,.12); }
   .ghost { font: inherit; padding: 8px 14px; border: 1px solid #C9D6E6; border-radius: 6px; background: #fff; color: #333; cursor: pointer; }
   .ghost.small { padding: 6px 12px; font-size: .9em; }
   .pnav { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
@@ -238,10 +248,10 @@
 
 <div class="card" data-panel="udgifter">
   <h2 class="sec"><span aria-hidden="true">💰</span> Udgifter – hvad koster turen egentlig?<span class="step">Trin 4 af 6</span></h2>
-  <p>Her ser du de samme ture og lastbiler, som du valgte under <b>Byg din rute</b> – men kun regnskabet. Ruteplanlægningen bestemmer kjørte kilometer og last. Udgifterne nedenunder viser, hvad det koster at gennemføre planen: energi, afgifter – og hvad el-lastbiler faktisk sparer.</p>
+  <p>Her ser du de samme ture og lastbiler, som du valgte under <b>Byg din rute</b> – men kun regnskabet. Ruteplanlægningen bestemmer kørte kilometer og last. Udgifterne nedenunder viser, hvad det koster at gennemføre planen: energi, afgifter – og hvad el-lastbiler faktisk sparer.</p>
   <div class="tablewrap">
   <table class="rt" style="font-size:.88em">
-    <tr><th>Kort om udgiftterne</th><th>Pointe</th></tr>
+    <tr><th>Kort om udgifterne</th><th>Pointe</th></tr>
     <tr><td>Energi (brændstof/el)</td><td>Den største udgift pr. tur – afhænger af km, last og køremåde</td></tr>
     <tr><td>Vejafgift (km-afgift)</td><td>Betales pr. km på afgiftspligtige veje – el sidder i den billigste CO2-klasse (0,13 kr./km mod ca. 0,91 for diesel)</td></tr>
     <tr><td>Vægtafgift</td><td>Fast beløb pr. år – betales hvad end bilen kører; her omregnet pr. km (100.000 km/år)</td></tr>
@@ -349,7 +359,7 @@
     <em class="hint">Siden gennemgås automatisk en gang om måneden – både priser, afgifter og lastbilerne – og datostemplet ovenfor viser altid det seneste tjek. Faglige ændringer (regler, tal og sanktioner) samles i fanen <em>🔄 Opdateringer</em>, nyeste først. Listen herunder kan også bruges som manuel kontrol eller som mini-opgave til klassen.</em>
     <strong>Månedligt tjek – 5 minutter:</strong> Tjek disse tal, hvis du selv vil være med:
     <ul style="margin:6px 0 0; padding-left:18px">
-      <li><b>Dieselprisen</b> (modellen bruger 10 kr./l) – find dagenspris hos <a href="https://tankpriser.dk/danmark/braendstof/diesel" target="_blank">TankPriser.dk (landsgennemsnit)</a> eller din lokale tank</li>
+      <li><b>Dieselprisen</b> (modellen bruger 10 kr./l) – find dagens pris hos <a href="https://tankpriser.dk/danmark/braendstof/diesel" target="_blank">TankPriser.dk (landsgennemsnit)</a> eller din lokale tank</li>
       <li><b>Ladepriserne</b> (0,75 kr./kWh depot · 2,50 kr./kWh hurtiglader) – tjek ladenetværkernes priser (fx E.ON, Shell Recharge)</li>
       <li><b>Vejafgiftssatserne</b> (0,91/0,13 kr./km) – tjek <a href="https://vejafgifter.dk/" target="_blank">vejafgifter.dk</a> for årets satser</li>
       <li><b>Elmix-CO2</b> (0,2 kg CO2/kWh) – tjek Energistyrelsens opgørelse for det danske elnet</li>
@@ -443,7 +453,7 @@
   var truckById = {}, D_TRUCKS = [], E_TRUCKS = [];
   TRUCKS.forEach(function (t) { truckById[t.id] = t; (t.fuel === "diesel" ? D_TRUCKS : E_TRUCKS).push(t); });
 
-  // Hver rute køres af BEGE drivkræfter: én diesel-lastbil + én el-lastbil (route.d / route.e)
+  // Hver rute køres af begge drivkræfter: én diesel-lastbil + én el-lastbil (route.d / route.e)
   var A = { d: "fh460", e: "s45r", steps: [ { km: 180, v: 70, t: 17 }, { km: 180, v: 70, t: 17 } ] };
   var B = { d: "r500", e: "eactros", steps: [ { km: 320, v: 75, t: 32 } ] };
 
@@ -1022,5 +1032,6 @@
 </script>
 </body>
 </html>
+
 
 
